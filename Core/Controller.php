@@ -73,7 +73,7 @@ abstract class Controller
 	}
 
 	/**
-	 * Before after - called after an action method.
+	 * After filter - called after an action method.
 	 *
 	 * @return void
 	 */
