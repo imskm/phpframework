@@ -47,7 +47,7 @@ class Token
 	 */
 	public static function check($token, $token_name)
 	{
-		if(self::isExist($token_name))
+		if(self::exist($token_name))
 			return $_SESSION[$token_name] === $token;
 
 		return false;
@@ -58,7 +58,7 @@ class Token
 	 * @var string  Token name / key
 	 * @return bool
 	 */
-	public static function isExist($token_name)
+	public static function exist($token_name)
 	{
 		return isset($_SESSION[$token_name]);
 	}
@@ -70,7 +70,7 @@ class Token
 	 */
 	public static function destroy($token_name)
 	{
-		if(!self::isExist($token_name)) {
+		if(!self::exist($token_name)) {
 			return false;
 		}
 
