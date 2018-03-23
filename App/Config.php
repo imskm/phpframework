@@ -61,6 +61,7 @@ class Config
 	const SITE_CONFIG = array(
 
 		"site_name" => "MVCFramework",
+		"csrf_name" => "csrf_token",
 
 	);
 

@@ -11,7 +11,7 @@ use \Core\View;
 class Login extends \Core\Controller
 {
 	
-	protected function index()
+	public function index()
 	{
 
 		return View::render("Login/index.php");
@@ -32,8 +32,7 @@ class Login extends \Core\Controller
 
 	protected function before()
 	{
-		echo "Passed through before ";
+		$this->middleware("csrf");
 		return true;
-
 	}
 }

@@ -84,8 +84,8 @@ abstract class Controller
 	/**
 	 * Middleware method - Perform Middleware action before controller action
 	 */
-	public function middleware($guard, $callable)
+	public function middleware($guard, $callable = null)
 	{
-		
+		$this->middleware->guard($guard)->process();
 	}
 }
