@@ -11,7 +11,7 @@ use \Core\View;
 class Login extends \Core\Controller
 {
 	
-	public function index()
+	protected function index()
 	{
 
 		return View::render("Login/index.php");

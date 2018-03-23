@@ -2,6 +2,8 @@
 
 namespace Core\Middleware;
 
+use \Core\Token\Token;
+
 /**
 * Middleware class
 */

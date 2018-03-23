@@ -37,4 +37,31 @@ class Config
 	* @var boolean
 	*/
 	const SHOW_ERRORS = true;
+
+	/**
+	 * Get the config from SITE_CONFIG constant
+	 * @var string $key of the config name
+	 * @return the config set with $key
+	 */
+	public static function get($key)
+	{
+		if(! isset(self::SITE_CONFIG[$key])) {
+			throw new \Exception("Config $key not found!");
+		}
+
+		return self::SITE_CONFIG[$key];
+	}
+
+	/**
+	 * ------------------------------------------
+	 * User defined configs
+	 * ------------------------------------------
+	 * Additional User configuration
+	 */
+	const SITE_CONFIG = array(
+
+		"site_name" => "MVCFramework",
+
+	);
+
 }

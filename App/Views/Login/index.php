@@ -19,6 +19,7 @@
 		<label for="password">Password</label>
 		<input type="text" name="password" id="password"> <br>
 		<input type="submit" value="Login" name="login">
+		<?= csrf_field() ?>
 	</form>
 	
 </body>

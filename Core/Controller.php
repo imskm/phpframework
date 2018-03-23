@@ -80,4 +80,12 @@ abstract class Controller
 	protected function after()
 	{
 	}
+
+	/**
+	 * Middleware method - Perform Middleware action before controller action
+	 */
+	public function middleware($guard, $callable)
+	{
+		
+	}
 }
