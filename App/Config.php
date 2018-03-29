@@ -9,10 +9,22 @@ namespace App;
 class Config
 {
 	/**
+	 * DB Driver
+	 * @var string
+	 */
+	const DB_DRIVER = "mysql";
+
+	/**
 	 * Database host
 	 * @var string
 	 */
-	const DB_HOST = "localhost";
+	const DB_HOST = "127.0.0.1";
+
+	/**
+	 * Database port
+	 * @var string
+	 */
+	const DB_PORT = "3306";
 
 	/**
 	 * Database name
@@ -57,6 +69,7 @@ class Config
 	 * User defined configs
 	 * ------------------------------------------
 	 * Additional User configuration
+	 *
 	 */
 	const SITE_CONFIG = array(
 

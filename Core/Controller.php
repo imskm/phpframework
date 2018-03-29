@@ -11,9 +11,10 @@ abstract class Controller
 {
 	/**
 	 * Middleware instance
+	 *
 	 * @var middleware object
 	 */
-	protected $middleware;
+	// protected $middleware;
 
 	/**
 	 * Parameters from the matched route
@@ -29,7 +30,6 @@ abstract class Controller
 	function __construct($route_params)
 	{
 		$this->route_params = $route_params;
-		$this->middleware = new Middleware;
 	}
 
 	/**
@@ -84,8 +84,10 @@ abstract class Controller
 	/**
 	 * Middleware method - Perform Middleware action before controller action
 	 */
-	public function middleware($guard, $callable = null)
+	public function middleware($guard, $next = null)
 	{
+		die(var_dump($next()));
+		$this->middleware = new Middleware;
 		$this->middleware->guard($guard)->process();
 	}
 }

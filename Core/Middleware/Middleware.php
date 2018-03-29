@@ -11,38 +11,56 @@ use \App\Config as Config;
 class Middleware
 {
 
-	protected $middleware;
+	protected static $middleware;
+
+	protected static $next;
+
 	protected $middlewares = array(
 		"auth" => "auth",
 		"csrf" => "verifyCSRFToken",
 	);
 
-	public function guard($guard)
+	public static function add($middleware, $next = null)
 	{
-		if (! isset($this->middlewares[$guard])) {
-			throw new \Exception("Middleware {$guard} was not fond.");
-		}
+		self::$middleware = $middleware;
+		self::$next = $next;
 
-		$this->middleware = $this->middlewares[$guard];
-
-		return $this;
+		return new self;
 	}
+
 
 	public function process()
 	{
-		$middleware = $this->middleware;
-		$this->$middleware();
+		if (! $this->check()) {
+			throw new \Exception("Invalid Middlewares.");
+		}
+
+		$this->{$this->middlewares[self::$middleware]}();
+
+		return (self::$next)()();
 	}
 	
-	public function auth()
+	protected function check()
 	{
+		if (! self::$next) {
+			self::$next = function() {
+				return true;
+			};
+		}
 
+		return isset($this->middlewares[self::$middleware]);
 	}
+
 
 	public function verifyCSRFToken()
 	{
-		if (Token::check(Config::get("csrf_name"), $_POST["csrf_token"])) {
-			throw new \Exception("CSRF Token miss match");
+		// echo Token::get(Config::get("csrf_name")) . '<br>';
+		// echo $_POST["csrf_token"] . '<br>';
+
+		if(isset($_POST["csrf_token"])) {
+			if (! Token::check($_POST["csrf_token"], Config::get("csrf_name"))) {
+				throw new \Exception("CSRF Token miss match");
+			}
 		}
 
 		return true;

@@ -54,18 +54,6 @@ require_once CORE_PATH . DS . "helpers" . DS . "autoloader.php";
  */
 $router = new Core\Router();
 
-// Add the routes
-$router->add('', ['controller' => 'Home', 'action' => 'index']);
-$router->add('posts', ['controller' => 'Posts', 'action' => 'index']);
-$router->add('{controller}/{action}');
-$router->add('{controller}/{id:\d+}/{action}');
-$router->add('admin/{controller}/{action}', ["namespace" => "Admin"]);
-$router->add('admin/{controller}/{id:\d+}/{action}', ["namespace" => "Admin"]);
-
-// Developping Framework route
-$router->add('development', ['controller' => 'development', 'action' => 'index']);
-$router->add('development', ['controller' => 'development', 'action' => 'validate']);
-
 // Adding custom routes specified by user if any
 if( ! empty(CUSTOM_ROUTE_FILE) ) {
 
@@ -74,5 +62,16 @@ if( ! empty(CUSTOM_ROUTE_FILE) ) {
 		require $_custom_routes;
 	}
 }
+
+// Add the default routes
+$router->add('', ['controller' => 'Home', 'action' => 'index']);
+$router->add('posts', ['controller' => 'Posts', 'action' => 'index']);
+$router->add('{controller}/{action}');
+$router->add('{controller}/{id:\d+}/{action}');
+
+
+// Developping Framework route
+$router->add('development', ['controller' => 'development', 'action' => 'index']);
+$router->add('development', ['controller' => 'development', 'action' => 'validate']);
 
 $router->dispatch($_SERVER["QUERY_STRING"]);
