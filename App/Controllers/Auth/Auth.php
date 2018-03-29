@@ -15,16 +15,19 @@ class Auth extends \Core\Controller
 	protected function login()
 	{
 		// $user = User::all();
-		// $user = User::find(1);
+		$user = User::find(5);
 		// $user = User::where("email", "muktar@gmail.com");
-		// var_dump($user->first());
+		var_dump($user);
 		// echo '<br>Count : ' . $user->count();
-		$user = new User;
-		$user->name = "Ibtesham";
-		$user->email = "ibtesham@gmail.com";
-		$user->password = password_hash("12345678", PASSWORD_DEFAULT);
-		var_dump($user->save());
-		var_dump($user->lastID());
+		// $user = new User;
+		// $user->name = "Test";
+		// $user->email = "test@gmail.com";
+		// $user->password = password_hash("12345678", PASSWORD_DEFAULT);
+		// var_dump($user->save());
+		// var_dump($user->lastID());
+		$user->password = password_hash("waqar", PASSWORD_DEFAULT);
+		$user->name = "Waqar Azam";
+		$user->save();
 
 		return View::render("Auth/login.php");
 	}

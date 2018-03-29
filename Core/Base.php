@@ -30,13 +30,22 @@ class Base
 		return isset($this->data[$key]);
 	}
 
-	public function allProperties()
+	protected function allProperties()
 	{
 		if (! $this->data) {
 			return null;
 		}
 
 		return $this->data;
+	}
+
+	protected function massStore(array $properties)
+	{
+		foreach ($properties as $property) {
+			foreach ($property as $key => $value) {
+				$this->data[$key] = $value;
+			}
+		}
 	}
 	
 }

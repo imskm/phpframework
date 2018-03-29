@@ -45,8 +45,8 @@ class Query extends \Core\Base
 		$column_name_string = "";
 		$bind_params_string = "";
 		$count = count($columns);
-		$i = 1;
-		foreach ($columns as $i => $column) {
+		$i = 0;
+		foreach ($columns as $column) {
 
 			$column_name_string .= "{$column}";
 			$bind_params_string .= ":{$column}";
@@ -69,10 +69,26 @@ class Query extends \Core\Base
 	 * @param void
 	 * @return string
 	 */
-	public function buildUpdate()
+	public function buildUpdate($columns, $where_column , $operator, $value)
 	{
-		$template = "UPDATE %s FROM %s";
+		$template = "UPDATE %s SET %s";
 
+		$set = "";
+		$count = count($columns);
+		$i = 0;
+
+		foreach ($columns as $column) {
+			$set .= "{$column} = :{$column}";
+			if ($i < $count - 1) {
+				$set .= ", ";
+			}
+			$i++;
+		}
+
+		$this->sql = sprintf($template, $this->getTableName(), $set);
+		$this->setWhere($where_column, $operator, $value);
+
+		return $this;
 	}
 
 	/**

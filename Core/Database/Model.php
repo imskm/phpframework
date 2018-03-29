@@ -17,7 +17,7 @@ abstract class Model extends Query
 	protected 	$error = false,
 				$count = 0,
 				$results = array(),
-				$last_insert_id,
+				$last_insert_id = null,
 				$is_fetchable = false,
 				$exists = false;
 
@@ -66,8 +66,6 @@ abstract class Model extends Query
 		} else {
 			if ($this->performInsert()) {
 				$this->last_insert_id = Conn::getConnection()->lastInsertId();
-			} else {
-				$this->last_insert_id = null;
 			}
 		}
 
@@ -105,6 +103,7 @@ abstract class Model extends Query
 		// save() method will perform update or insert.
 		if ($instance->count) {
 			$instance->exists = true;
+			$instance->massStore($instance->get());
 		}
 
 		return $instance;
@@ -161,6 +160,7 @@ abstract class Model extends Query
 
 	protected function performInsert()
 	{
+		$this->is_fetchable = false;
 		$columns = array_keys($this->allProperties());
 		$this->buildInsert($columns);
 
@@ -168,6 +168,33 @@ abstract class Model extends Query
 		// die(var_dump($this->sql));
 
 		return $this->query($this->sql, $columns);
+	}
+
+	protected function performUpdate()
+	{
+		$this->is_fetchable = false;
+		$columns = array_keys($this->allProperties());
+
+		// Removing Primary key so that ID should not be the part of the SET in Update SQL
+		$clened_cols = $this->removeKey($this->getPrimaryKey(), $columns);
+
+		$this->buildUpdate(
+			$clened_cols,
+			$this->getPrimaryKey(),
+			"=",
+			$this->{$this->getPrimaryKey()}
+		);
+
+		// TESTING
+		// die(var_dump($this->sql));
+
+		return $this->query($this->sql, $columns);
+	}
+
+	protected function removeKey($key, array $keys)
+	{
+		unset($keys[ array_search($key, $keys) ]);
+		return $keys;
 	}
 
 	protected function isOperatorAllowed($operator)
