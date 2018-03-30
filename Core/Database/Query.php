@@ -73,6 +73,10 @@ class Query extends \Core\Base
 	{
 		$template = "UPDATE %s SET %s";
 
+		if (! $this->isOperatorAllowed($operator)) {
+			throw new \Exception("Invalid operator $operator");
+		}
+
 		$set = "";
 		$count = count($columns);
 		$i = 0;
@@ -96,10 +100,18 @@ class Query extends \Core\Base
 	 * @param void
 	 * @return string
 	 */
-	public function buildDelete()
+	public function buildDelete($where_column, $operator, $value)
 	{
 		$template = "DELETE FROM %s";
 
+		if (! $this->isOperatorAllowed($operator)) {
+			throw new \Exception("Invalid operator $operator");
+		}
+		
+		$this->sql = sprintf($template, $this->getTableName());
+		$this->setWhere($where_column, $operator, $value);
+
+		return $this;
 	}
 
 	public function getFields()
@@ -176,6 +188,16 @@ class Query extends \Core\Base
 		$this->sql = sprintf($this->sql, $column, $operator, $column);
 
 		return $this;
+	}
+
+	protected function isOperatorAllowed($operator)
+	{
+		$operators_allowed = array('=', '>', '<', '>=', '<=', '!=', '<>');
+		if (! in_array($operator, $operators_allowed)) {
+			return false;
+		}
+
+		return true;
 	}
 
 

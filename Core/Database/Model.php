@@ -11,18 +11,82 @@ use Core\Database\Connector as Conn;
  */
 abstract class Model extends Query
 {
+	/**
+	 * Table name at runtime
+	 *
+	 * @var string
+	 */
 	protected $model;
+
+	/**
+	 * Primary Key of the table
+	 * Default is "id" else set by Superclass Model.
+	 *
+	 * @var string
+	 */
 	protected $primary_key = "id";
 
-	protected 	$error = false,
-				$count = 0,
-				$results = array(),
-				$last_insert_id = null,
-				$is_fetchable = false,
-				$exists = false;
+	/**
+	 * State of the last executed query.
+	 *
+	 * @var bool
+	 */
+	protected $error = false;
 
+	/**
+	 * Affected rows by the last DELETE, UPDATE, and INSERT query
+	 * Count of rows returned by SELECT query is also stored in $count
+	 * but it is not the same in all DBMS.
+	 *
+	 * @var int
+	 */
+	protected $count = 0;
+
+	/**
+	 * Stores rows returned by SELECT query.
+	 *
+	 * @var resource
+	 */
+	protected $results = array();
+
+	/**
+	 * ID of last inserted row of Auto_Increment column.
+	 *
+	 * @var int
+	 */
+	protected $last_insert_id = null;
+
+	/**
+	 * State boolean for making decision whether query() method should fetch
+	 * the result of last SELECT query.
+	 * If last query was UPDATE, INSERT and DELETE then row is not fetchable.
+	 *
+	 * @var bool
+	 */
+	protected $is_fetchable = false;
+
+	/**
+	 * Stores state that helps save() method to decide whether current save
+	 * operation is for INSERT or UPDATE.
+	 * So if the $exists is true then UPDATE operation will be performed
+	 * else INSERT operation.
+	 *
+	 * @var bool
+	 */
+	protected $exists = false;
+
+	/**
+	 * Cached Instance of the Model
+	 *
+	 * @var int
+	 */
 	protected static $instance = null;
 
+	/**
+	 * Create new model instance if not created
+	 *
+	 * @return $this
+	 */
 	protected static function getInstance()
 	{
 		if (! self::$instance) {
@@ -32,6 +96,14 @@ abstract class Model extends Query
 		return self::$instance;
 	}
 
+	/**
+	 * Execute query for the given sql.
+	 *
+	 * @param string $sql
+	 * @param array $bindValues  array of columns to be binded
+	 *
+	 * @return bool
+	 */
 	protected function query($sql, $bindValues = array())
 	{
 		$db = Conn::getConnection();
@@ -47,8 +119,15 @@ abstract class Model extends Query
 		if ($st->execute()) {
 			if ($this->is_fetchable) {
 				$this->results = $st->fetchAll(PDO::FETCH_OBJ);
-				$this->count = $st->rowCount();
 			}
+
+			// Note: rowCount() returns the number of rows affected by a
+			// DELETE, INSERT, or UPDATE statement.
+			// If the last SQL statement executed by the associated
+			// PDOStatement was a SELECT statement, some databases may
+			// return the number of rows returned by that statement.
+			// So be carefull when using other DB System except MySQL.
+			$this->count = $st->rowCount();
 			return true;
 		}
 
@@ -57,6 +136,11 @@ abstract class Model extends Query
 		return false;
 	}
 
+	/**
+	 * Insert / Update Wrapper mehtod.
+	 *
+	 * @return bool
+	 */
 	public function save()
 	{
 		// die(var_dump($this->name));
@@ -72,6 +156,12 @@ abstract class Model extends Query
 		return ! $this->error;
 	}
 
+	/**
+	 * Execute select query to get all records of a table in the DB.
+	 *
+	 * @param array $columns
+	 * @return $this
+	 */
 	public static function all($columns = array("*"))
 	{
 		$this->is_fetchable = true;
@@ -81,6 +171,12 @@ abstract class Model extends Query
 		return $instance;
 	}
 
+	/**
+	 * Find the record(s) by given id on primary key.
+	 *
+	 * @param mixed $id  Primary key of the model
+	 * @return $this
+	 */
 	public static function find($id)
 	{
 		if (! $id) {
@@ -109,6 +205,14 @@ abstract class Model extends Query
 		return $instance;
 	}
 
+	/**
+	 * Execute select query by a specific where column.
+	 *
+	 * @param string $column
+	 * @param mixed $value
+	 * @param string $operator
+	 * @return $this
+	 */
 	public static function where($column, $value, $operator = '=')
 	{
 		if (! $this->isOperatorAllowed($operator)) {
@@ -128,36 +232,86 @@ abstract class Model extends Query
 		return $instance;
 	}
 
-	public function delete()
+
+	/**
+	 * Execute delete query on the currently found model / by given id.
+	 *
+	 * @param mixid $id
+	 * @return bool
+	 */
+	public function delete($id = null)
 	{
-		
+		$this->is_fetchable = false;
+		if (! $id) {
+			$id = $this->{$this->getPrimaryKey()};
+		} else {
+			$this->{$this->getPrimaryKey()} = $id;
+		}
+
+		$this->buildDelete($this->getPrimaryKey(), "=", $id);
+
+		// TESTING
+		// die(var_dump($this->sql));
+
+		return $this->query($this->sql, array($this->getPrimaryKey()));
 	}
 
+
+	/**
+	 * Returns the last inserted row id.
+	 *
+	 * @return int
+	 */
 	public function lastID()
 	{
 		return $this->last_insert_id;
 	}
 
+	/**
+	 * Returns the count of affected rows by last sql query.
+	 *
+	 * @return int
+	 */
 	public function count()
 	{
 		return $this->count;
 	}
 
+	/**
+	 * Returns the result of select query from $this->result var.
+	 *
+	 * @return resource|array
+	 */
 	public function get()
 	{
 		return $this->results;
 	}
 
+	/**
+	 * Returns the first result of select query from $this->result var.
+	 *
+	 * @return resource
+	 */
 	public function first()
 	{
 		return $this->get()[0];
 	}
 
+	/**
+	 * Returns the last result of select query from $this->result var.
+	 *
+	 * @return resource
+	 */
 	public function last()
 	{
 		return $this->get()[$this->count - 1];
 	}
 
+	/**
+	 * Performs insert operation.
+	 *
+	 * @return bool
+	 */
 	protected function performInsert()
 	{
 		$this->is_fetchable = false;
@@ -170,6 +324,11 @@ abstract class Model extends Query
 		return $this->query($this->sql, $columns);
 	}
 
+	/**
+	 * Performs update operation.
+	 *
+	 * @return bool
+	 */
 	protected function performUpdate()
 	{
 		$this->is_fetchable = false;
@@ -191,20 +350,18 @@ abstract class Model extends Query
 		return $this->query($this->sql, $columns);
 	}
 
+	/**
+	 * Removes key from the given keys array
+	 * Mainly used for removing primary key from keys array.
+	 *
+	 * @param string $key
+	 * @param array $keys
+	 * @return array
+	 */
 	protected function removeKey($key, array $keys)
 	{
 		unset($keys[ array_search($key, $keys) ]);
 		return $keys;
 	}
 
-	protected function isOperatorAllowed($operator)
-	{
-		$operators_allowed = array('=', '>', '<', '>=', '<=', '!=', '<>');
-		if (! in_array($operator, $operators_allowed)) {
-			return false;
-		}
-
-		return true;
-	}
-	
 }

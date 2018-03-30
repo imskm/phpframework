@@ -15,9 +15,9 @@ class Auth extends \Core\Controller
 	protected function login()
 	{
 		// $user = User::all();
-		$user = User::find(5);
+		$user = User::find(4);
 		// $user = User::where("email", "muktar@gmail.com");
-		var_dump($user);
+		// var_dump($user);
 		// echo '<br>Count : ' . $user->count();
 		// $user = new User;
 		// $user->name = "Test";
@@ -25,9 +25,14 @@ class Auth extends \Core\Controller
 		// $user->password = password_hash("12345678", PASSWORD_DEFAULT);
 		// var_dump($user->save());
 		// var_dump($user->lastID());
-		$user->password = password_hash("waqar", PASSWORD_DEFAULT);
-		$user->name = "Waqar Azam";
-		$user->save();
+		// $user->password = password_hash("waqar", PASSWORD_DEFAULT);
+		// $user->name = "Waqar Azam";
+		// $user->save();
+		if ($user->count() && $user->delete()) {
+			echo "DELETED 5";
+		} else {
+			echo "FAILD";
+		}
 
 		return View::render("Auth/login.php");
 	}
