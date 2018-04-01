@@ -11,7 +11,7 @@ print_r($user->first());
 echo 'Count : ' . $user->count();
 ```
 
-* __Saving model__
+##### __Saving model__
 ```php
 $user = new User;
 $user->name = "Test User";
@@ -20,12 +20,12 @@ $user->password = password_hash("test", PASSWORD_DEFAULT);
 $user->save();
 ```
 
-* __Accessing ID of Last saved model__
+##### __Accessing ID of Last saved model__
 ```php
 $user->lastID();
 ```
 
-* __Updating existing record__
+##### __Updating existing record__
 ```php
 $user = User::find(2);
 $user->password = password_hash("waqar", PASSWORD_DEFAULT);
@@ -33,7 +33,7 @@ $user->name = "Waqar Azam";
 $user->save();
 ```
 
-* __Deleting existing record__
+##### __Deleting existing record__
 ```php
 $user = User::find(2);
 if ($user->count() && $user->delete()) {
