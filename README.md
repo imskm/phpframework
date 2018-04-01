@@ -13,11 +13,11 @@ echo 'Count : ' . $user->count();
 
 * __Saving model__
 ```php
-	$user = new User;
-	$user->name = "Test User";
-	$user->email = "test@gmail.com";
-	$user->password = password_hash("test", PASSWORD_DEFAULT);
-	$user->save();
+$user = new User;
+$user->name = "Test User";
+$user->email = "test@gmail.com";
+$user->password = password_hash("test", PASSWORD_DEFAULT);
+$user->save();
 ```
 
 * __Accessing ID of Last saved model__
