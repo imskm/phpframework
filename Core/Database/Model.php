@@ -164,8 +164,8 @@ abstract class Model extends Query
 	 */
 	public static function all($columns = array("*"))
 	{
-		$this->is_fetchable = true;
 		$instance = self::getInstance();
+		$instance->is_fetchable = true;
 		$instance->query($instance->buildSelect($columns)->sql);
 
 		return $instance;
@@ -215,11 +215,12 @@ abstract class Model extends Query
 	 */
 	public static function where($column, $value, $operator = '=')
 	{
-		if (! $this->isOperatorAllowed($operator)) {
+		$instance = self::getInstance();
+		$instance->is_fetchable = true;
+		if (! $instance->isOperatorAllowed($operator)) {
 			throw new \Exception("Invalid operator $operator");
 		}
 
-		$instance = self::getInstance();
 		$sql = $instance->buildSelect(array("*"))
 				->setWhere($column, $operator, $value)
 				->sql;
