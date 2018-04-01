@@ -13,6 +13,7 @@
 </head>
 <body>
 
+	<?php var_dump($this->content); ?>
 	<form action="<?= path_for("auth/attempt-login") ?>" method="post">
 		<label for="username">Email</label>
 		<input type="text" name="username" id="username"> <br>

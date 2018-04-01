@@ -2,7 +2,6 @@
 
 namespace App\Controllers\Auth;
 
-use \Core\View;
 use App\Models\User;
 use \Core\Database\Query;
 use \Core\Middleware\Middleware;
@@ -20,7 +19,7 @@ class Auth extends \Core\Controller
 		// $user = User::all();
 		$user = User::find(12);
 		// $user = User::where("email", "muktar@gmail.com");
-		// print_r($user->first());
+		print_r($user->first());
 		// print_r($user);
 		// echo '<br>Count : ' . $user->count();
 
@@ -34,13 +33,13 @@ class Auth extends \Core\Controller
 		// $user->password = password_hash("waqar", PASSWORD_DEFAULT);
 		// $user->name = "Waqar Azam";
 		// $user->save();
-		if ($user->count() && $user->delete()) {
-			echo "DELETED 12";
-		} else {
-			echo "FAILD";
-		}
+		// if ($user->count() && $user->delete()) {
+		// 	echo "DELETED 12";
+		// } else {
+		// 	echo "FAILD";
+		// }
 
-		return View::render("Auth/login.php");
+		return $this->view->render("Auth/login.php");
 	}
 
 	protected function attemptLogin()
@@ -50,9 +49,9 @@ class Auth extends \Core\Controller
 
 	}
 
-	public function signup()
+	public function register()
 	{
-		return View::render("Auth/signin.php");
+		return $this->view->render("Auth/register.php");
 	}
 
 	public function logout()

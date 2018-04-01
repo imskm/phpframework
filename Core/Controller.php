@@ -17,6 +17,13 @@ abstract class Controller
 	// protected $middleware;
 
 	/**
+	 * View instance
+	 *
+	 * @var resource \Core\View
+	 */
+	public $view;
+
+	/**
 	 * Parameters from the matched route
 	 * @var array
 	 */
@@ -30,6 +37,7 @@ abstract class Controller
 	function __construct($route_params)
 	{
 		$this->route_params = $route_params;
+		$this->view = new View(VIEW_PATH);
 	}
 
 	/**

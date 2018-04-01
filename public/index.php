@@ -19,6 +19,7 @@ define("ROOT", dirname(__DIR__));
 
 const APP_PATH = ROOT . DS . "App";
 const CORE_PATH = ROOT . DS . "Core";
+const VIEW_PATH = APP_PATH . DS . "Views";
 const CUSTOM_ROUTE_FILE = "Routes.php";
 
 /**
