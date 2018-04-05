@@ -6,12 +6,16 @@
 
 <link rel="stylesheet" href="/assets/css/styles.css">
 
+<?= $this->fetchSection('styles') ?>
+
 </head>
 <body>
 	<div class="container">
 
-		<?php $this->content() ?>
+		<?= $this->content() ?>
 
 	</div>
+
+	<?= $this->fetchSection('scripts') ?>
 </body>
 </html>
