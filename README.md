@@ -42,3 +42,28 @@ if ($user->count() && $user->delete()) {
 	echo "FAILD";
 }
 ```
+
+# View Interfaces
+
+##### __Using a template file__
+This should be used inside the view file.
+```php
+$this->use("template/file/path", "title"=> "Contact page");
+```
+
+##### __Declaring section inside a view__
+Inside the view file
+```php
+$this->section('content');
+	<div class="sidebar">
+	...
+	</div>
+$this->endSection();
+```
+
+##### __Fetching the section__
+Fetching and injecting the section in template file.
+Inside template file.
+```php
+$this->fetchSection('content');
+```
