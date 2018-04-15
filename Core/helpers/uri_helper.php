@@ -22,3 +22,12 @@ if( ! function_exists ( "path_for" ) )
 	}
 
 }
+
+if( ! function_exists( "redirect" ) )
+{
+	function redirect($url) {
+
+		header("Location: " . path_for($url));
+		exit;
+	}
+}
