@@ -50,4 +50,9 @@ class Session
 	{
 		session_destroy();
 	}
+
+	public static function exist($key)
+	{
+		return isset($_SESSION[$key]);
+	}
 }

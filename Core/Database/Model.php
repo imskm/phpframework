@@ -82,6 +82,8 @@ abstract class Model extends Query
 	 */
 	protected static $instance = null;
 
+	protected $where_params = array();
+
 	/**
 	 * Create new model instance if not created
 	 *
@@ -228,9 +230,30 @@ abstract class Model extends Query
 		// TESTING
 		// die($sql);
 
-		$instance->query($sql, array($column));
+		// $instance->query($sql, array($column));
+		$instance->where_params[] = $column;
 
 		return $instance;
+	}
+
+
+	public function andWhere($column, $value, $operator = '=')
+	{
+		$this->setAndWhere($column, $operator, $value);
+		$this->where_params[] = $column;
+		
+		// TESTING
+		// die($this->sql);
+
+		return $this;
+	}
+
+	public function orWhere($column, $value, $operator = '=')
+	{
+		$this->setOrWhere($column, $operator, $value);
+		$this->where_params[] = $column;
+
+		return $this;
 	}
 
 
@@ -285,6 +308,10 @@ abstract class Model extends Query
 	 */
 	public function get()
 	{
+		if ($this->where_params) {
+			$this->query($this->sql, $this->where_params);
+		}
+
 		return $this->results;
 	}
 

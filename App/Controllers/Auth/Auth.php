@@ -17,8 +17,10 @@ class Auth extends \Core\Controller
 
 		// echo User::all()->count();
 		// $user = User::all();
-		$user = User::find(2);
+		// $user = User::find(2);
 		// $user = User::where("email", "muktar@gmail.com");
+		$user = User::where('email', 'sadaf@gmail.com')->andWhere('password', '12345678');
+		// $user = User::where('email', 'ssadaf@gmail.com')->orWhere('password', '12345678');
 		print_r($user->first());
 		// print_r($user);
 		// echo '<br>Count : ' . $user->count();

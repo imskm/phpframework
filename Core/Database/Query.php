@@ -190,6 +190,32 @@ class Query extends \Core\Base
 		return $this;
 	}
 
+	public function setAndWhere($column, $operator, $value)
+	{
+		// Setting the property dynamically
+		// Handled by Base class
+		// doing this so that query() method can bind the value
+		$this->{$column} = $value;
+		$template = " AND %s %s :%s";
+		$this->sql .= $template;
+		$this->sql = sprintf($this->sql, $column, $operator, $column);
+
+		return $this;
+	}
+
+	public function setOrWhere($column, $operator, $value)
+	{
+		// Setting the property dynamically
+		// Handled by Base class
+		// doing this so that query() method can bind the value
+		$this->{$column} = $value;
+		$template = " OR %s %s :%s";
+		$this->sql .= $template;
+		$this->sql = sprintf($this->sql, $column, $operator, $column);
+
+		return $this;
+	}
+
 	protected function isOperatorAllowed($operator)
 	{
 		$operators_allowed = array('=', '>', '<', '>=', '<=', '!=', '<>');
