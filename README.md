@@ -43,6 +43,18 @@ if ($user->count() && $user->delete()) {
 }
 ```
 
+##### __Querying with AND clause__
+```php
+$user = User::where('email', 'sadaf@gmail.com')
+			->andWhere('password', '12345678');
+
+// Getting all results
+$result = $user->get();
+
+// Getting first result
+$result = $user->first();
+```
+
 # View Interfaces
 
 ##### __Using a template file__
