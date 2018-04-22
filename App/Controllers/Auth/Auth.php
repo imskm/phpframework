@@ -17,7 +17,7 @@ class Auth extends \Core\Controller
 
 		// echo User::all()->count();
 		// $user = User::all();
-		$user = User::find(12);
+		$user = User::find(2);
 		// $user = User::where("email", "muktar@gmail.com");
 		print_r($user->first());
 		// print_r($user);
@@ -49,7 +49,7 @@ class Auth extends \Core\Controller
 
 	}
 
-	public function register()
+	protected function register()
 	{
 		return $this->view->render("Auth/register.php");
 	}
@@ -61,8 +61,10 @@ class Auth extends \Core\Controller
 
 	protected function before()
 	{
-		return(Middleware::add("csrf", function() {
-			return new \App\Middleware\AuthMiddleware;
-		})->process());
+		// New way to handle Middleware
+		return (new \App\Middlewares\GuestMiddleware)();
+		// return(Middleware::add("csrf", function() {
+		// 	return new \App\Middlewares\AuthMiddleware;
+		// })->process());
 	}
 }

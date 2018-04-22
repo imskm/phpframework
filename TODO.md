@@ -10,4 +10,6 @@
 
 * Add relationship feature in Model class
 
-Add AndWhere and OrWhere functionality in Model. So that developer can select with more than one where condition.
+* Add AndWhere and OrWhere functionality in Model. So that developer can select with more than one where condition.
+
+* Add Session::exists() method
