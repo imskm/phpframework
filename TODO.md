@@ -25,3 +25,6 @@
 
 * Add Session::exists() method
 	-- done
+
+* Add update functionality on getting data using where() method also as I did in find() method.
+	--

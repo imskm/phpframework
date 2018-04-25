@@ -91,11 +91,12 @@ abstract class Model extends Query
 	 */
 	protected static function getInstance()
 	{
-		if (! self::$instance) {
-			$class = get_called_class();
-			self::$instance = new $class();
+		$class = get_called_class();
+		if (! self::$instance[$class]) {
+			self::$instance[$class] = new $class();
 		}
-		return self::$instance;
+		
+		return self::$instance[$class];
 	}
 
 	/**
