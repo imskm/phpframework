@@ -311,6 +311,7 @@ abstract class Model extends Query
 	{
 		if ($this->where_params) {
 			$this->query($this->sql, $this->where_params);
+			$this->clearWhereParams();
 		}
 
 		return $this->results;
@@ -393,4 +394,8 @@ abstract class Model extends Query
 		return $keys;
 	}
 
+	protected function clearWhereParams()
+	{
+		$this->where_params = array();
+	}
 }
