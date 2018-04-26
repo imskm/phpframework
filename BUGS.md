@@ -40,3 +40,10 @@
 	
 	* ISSUE :
 		Don't define a function as protected method, it crashes the webserver. Don't know why.
+
+## BUG IN THE VIEW CLASS
+	* When no template and content is defined in the view page then no output is given to the browser.
+	* FIX
+		It should check for the available content if it is avialable in the content variable then it should output it to client no matter if the user defines a section or not. If content is present then output it.
+		
+		Some time user may test his view without using any template and section, he can simple add the entire html in a single view and want to take a look on the page.
