@@ -28,3 +28,17 @@
 
 * Add update functionality on getting data using where() method also as I did in find() method.
 	--
+
+* Remove throw Exception code from Validator class
+  When a required field is not present in the $\_POST variable, Validator class throws exception. instead of throwing the error just set the error in error variable stating the required filed is missing.
+  -- 
+
+* Add the following feature to Model class
+	1. Fetching data from db using ORDER BY
+	1. Add PAGINATE method to fetch record by LIMIT AND OFFSET
+
+	--
+
+* Rethink on the design of Method
+	1. What each method should return?
+	1. Each method should return data / object according to function that mathod carries
