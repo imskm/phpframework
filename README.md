@@ -123,7 +123,7 @@ class controller ...
 ```
 
 # Authentication Interfaces
-__Authentication class has some pre-built method that can handle Authenticated action for currently logged in user. They are :__
+Authentication class has some pre-built method that can handle Authenticated action for currently logged in user. They are :
 
 __Namespace of the class is App\Support\Authentication__
 

@@ -47,3 +47,6 @@
 		It should check for the available content if it is avialable in the content variable then it should output it to client no matter if the user defines a section or not. If content is present then output it.
 		
 		Some time user may test his view without using any template and section, he can simple add the entire html in a single view and want to take a look on the page.
+
+## TRYING TO ACCESS UNDEFINED PROPERTY XYZ EXCEPTION
+	* This Exception happens when a property is having a value of NULL then Update() mehtod of THE MOdel CLASS throws exception

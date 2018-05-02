@@ -42,3 +42,5 @@
 * Rethink on the design of Method
 	1. What each method should return?
 	1. Each method should return data / object according to function that mathod carries
+
+* Add unset() mehtod in Base calss to allow user to unset a property in Base class
