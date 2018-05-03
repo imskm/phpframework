@@ -8,10 +8,12 @@ use App\Support\Authentication\Auth;
 */
 class GuestMiddleware
 {
+	protected $redirect_to = 'user/home/index';
+
     public function __invoke()
     {
         if (Auth::check()) {
-        	redirect('user/home/index');
+        	redirect($this->redirect_to);
         }
 
         return true;

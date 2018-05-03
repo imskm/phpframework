@@ -8,10 +8,11 @@ use App\Support\Authentication\Auth;
 */
 class AuthMiddleware
 {
+	protected $redirect_to = 'home/index';
     public function __invoke()
     {
         if (! Auth::check()) {
-        	redirect('home/index');
+        	redirect($this->redirect_to);
         }
 
         return true;
