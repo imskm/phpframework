@@ -67,3 +67,13 @@ function genFileName($length = 20)
 	 }
 	 return ($id);
 }
+
+function genOptionHtmlTag($from, $to)
+{
+		$html = '';
+			for ($i = $from; $i <= $to; $i++) { 
+						$html .= '<option value="' . $i . '">' . $i . '</option>';
+							}
+
+			return $html;
+}
