@@ -44,3 +44,4 @@
 	1. Each method should return data / object according to function that mathod carries
 
 * Add unset() mehtod in Base calss to allow user to unset a property in Base class
+* Add fails() method in Validator class
