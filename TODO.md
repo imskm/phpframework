@@ -36,6 +36,7 @@
 * Add the following feature to Model class
 	1. Fetching data from db using ORDER BY
 	1. Add PAGINATE method to fetch record by LIMIT AND OFFSET
+	1. Fix the count() method of Model class
 
 	--
 
@@ -45,3 +46,10 @@
 
 * Add unset() mehtod in Base calss to allow user to unset a property in Base class
 * Add fails() method in Validator class
+* Remove BUG from validator class
+			var_dump($this->rules);
+			return ;
+
+* Found a VERY SERIOUS BUG - Error.php class does not show error for FATAL ERROR when I was extending a class which was missing.
+
+* In Validation class, unique() mehtod and other mehtods that need to access database uses old way to connect to database. Correct this.
