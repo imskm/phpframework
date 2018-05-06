@@ -68,12 +68,23 @@ function genFileName($length = 20)
 	 return ($id);
 }
 
-function genOptionHtmlTag($from, $to)
+function genOptionHtmlTag($from, $to, $selected = null)
 {
-		$html = '';
-			for ($i = $from; $i <= $to; $i++) { 
-						$html .= '<option value="' . $i . '">' . $i . '</option>';
-							}
+	$html = '';
+	if ($selected) {
+		for ($i = $from; $i <= $to; $i++) { 
+			if($i == $selected)
+				$html .= '<option value="' . $i . '" selected="selected">' . $i . '</option>';
+			else
+				$html .= '<option value="' . $i . '">' . $i . '</option>';
+		}
+	} else {
+		for ($i = $from; $i <= $to; $i++) { 
+			$html .= '<option value="' . $i . '">' . $i . '</option>';
+		}
+	}
 
-			return $html;
+	return $html;
 }
+
+
