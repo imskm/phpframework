@@ -53,3 +53,5 @@
 * Found a VERY SERIOUS BUG - Error.php class does not show error for FATAL ERROR when I was extending a class which was missing.
 
 * In Validation class, unique() mehtod and other mehtods that need to access database uses old way to connect to database. Correct this.
+* Remove line 74 from Error.php Core class and add this line (new View(VIEW_PATH))->render("$code.php"); as our View rendering class has changed.
+* Add response json encoded data in View class
