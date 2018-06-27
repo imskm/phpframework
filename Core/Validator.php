@@ -360,10 +360,6 @@ class Validator
 
 		}
 
-		var_dump($this->rules);
-		return ;
-
-
 		// echo "<br>==============<br>";
 		// var_dump($this->rules);
 		// exit;
