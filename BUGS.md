@@ -50,3 +50,8 @@
 
 ## TRYING TO ACCESS UNDEFINED PROPERTY XYZ EXCEPTION
 	* This Exception happens when a property is having a value of NULL then Update() mehtod of THE MOdel CLASS throws exception
+
+## BUG FOUND IN VALIDATOR CLASS
+	* if(preg_match($pattern, $this->validateValue && $this->size(10))) {
+	* at line number 241
+	* Required method does not work properly. It does not detects empty fields. It just checks the presence of the field.
