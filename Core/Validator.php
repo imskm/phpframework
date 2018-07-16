@@ -411,6 +411,11 @@ class Validator
 				$this->validateValue = $_POST[$field];
 				break;
 
+			case "PUT":
+				if(!isset($_PUT[$field])) {
+					throw new \Exception("$field input field not found.");
+				}
+
 			default :
 				throw new \Exception("$this->reqMethod not found.");
 		}
