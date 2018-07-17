@@ -35,10 +35,13 @@ spl_autoload_register(function ($class)
 
 /**
  * Registering Error and Exception handler
+ * and a shutdown handler : it is called when exit() is called
+ * or script finishes execution
  */
-error_reporting("E_ALL");
-set_error_handler("Core\Error::errorHandler");
+error_reporting(E_ALL);
+set_error_handler("Core\Error::errorHandler", error_reporting());
 set_exception_handler("Core\Error::exceptionHandler");
+register_shutdown_function("Core\Error::shutdownHandler");
 
 /**
  * -------------------------------------------------------

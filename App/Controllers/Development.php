@@ -6,6 +6,7 @@ use \Core\Validator;
 use \Core\View;
 use \Core\Database;
 use App\Models\Post;
+use \Tests\Test;
 
 
 /**
@@ -92,5 +93,11 @@ class Development extends \Core\Controller
 	{
 		// echo $_SERVER["SERVER_NAME"];
 		echo path_for("/development/validate/");
+	}
+
+	public function test()
+	{
+		$test = new Test;
+		$test->doTesting();
 	}
 }

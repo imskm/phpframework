@@ -10,7 +10,7 @@ class Error
 {
 
 	/**
-	 * Error handler. Convert all Errors to Excptions by throwing and ErrorException
+	 * Error handler. Convert all Errors to Excptions by throwing an ErrorException
 	 *
 	 * @param int $level   Error level
 	 * @param string $messsage   Error message
@@ -21,7 +21,7 @@ class Error
 	 */
 	public static function errorHandler($level, $message, $file, $line)
 	{
-		if(error_reporting() !== 0)	// to keep the @ operator working
+		if((int) error_reporting() !== 0)	// to keep the @ operator working
 		{
 			throw new \ErrorException($message, 0, $level, $file, $line);
 		}
@@ -43,6 +43,41 @@ class Error
 		}
 		http_response_code($code);
 
+		self::outputOrLogError($exception);
+ 	}
+
+	/**
+	 * Shutdown handler
+	 * This function is called when php script exits or finishes execution
+	 * 
+	 * @param void
+	 * @return void
+	 */
+	public static function shutdownHandler()
+	{
+		$error = error_get_last();
+
+		if ($error)
+		{
+			$level 		= $error['type'];
+			$message 	= $error['message'];
+			$file 		= $error['file'];
+			$line 		= $error['line'];
+
+			$exception = new \ErrorException($message, 0, $level, $file, $line);
+			
+			self::outputOrLogError($exception);
+		}
+	}
+
+	/**
+	 * Ouputs Error or Logs error to the file according to config
+	 *
+	 * @param ErrorException $exception
+	 * @return void
+	 */
+	protected static function outputOrLogError(\ErrorException $exception)
+	{
  		if(\App\Config::SHOW_ERRORS)
 		{
 			echo "<h1>Fatal Error</h1>";
@@ -71,7 +106,6 @@ class Error
 
 			View::render("$code.php");
 		}
-
- 	}
+	}
 
 }
