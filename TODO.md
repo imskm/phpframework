@@ -17,17 +17,9 @@
 * Develop Database class which will be capable of building all type of select query.
 	-- 
 
-* Add relationship feature in Model class
-	-- 
-
-* Add AndWhere and OrWhere functionality in Model. So that developer can select with more than one where condition.
-	-- done
 
 * Add Session::exists() method
 	-- done
-
-* Add update functionality on getting data using where() method also as I did in find() method.
-	--
 
 * Remove throw Exception code from Validator class
   When a required field is not present in the $\_POST variable, Validator class throws exception. instead of throwing the error just set the error in error variable stating the required filed is missing.
@@ -37,8 +29,14 @@
 	1. Fetching data from db using ORDER BY
 	1. Add PAGINATE method to fetch record by LIMIT AND OFFSET
 	1. Fix the count() method of Model class
+	1. Add update functionality on getting data using where() method also as I did in find() method.
+	1. Add __RELATIONSHIP feature__ in Model class
+	1. Add AndWhere and OrWhere functionality in Model. So that developer can select with more than one where condition.
+	1. Aadd all the options that a select sql query carries in fetching records from db.
+		all()->takeOld($number_of_items = 10)
+		all()->takeNew($number_of_items = 10)
 
-	--
+
 
 * Rethink on the design of Method
 	1. What each method should return?
