@@ -76,7 +76,7 @@ class Error
 	 * @param ErrorException $exception
 	 * @return void
 	 */
-	protected static function outputOrLogError(\Exception $exception)
+	protected static function outputOrLogError($exception)
 	{
  		if(\App\Config::SHOW_ERRORS)
 		{
