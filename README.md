@@ -60,7 +60,7 @@ $result = $user->first();
 ##### __Using a template file__
 This should be used inside the view file.
 ```php
-$this->use("template/file/path", "title"=> "Contact page");
+$this->use("template/file/path", ["title"=> "Contact page"]);
 ```
 
 ##### __Declaring section inside a view__
