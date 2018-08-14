@@ -21,6 +21,7 @@ const APP_PATH = ROOT . DS . "App";
 const CORE_PATH = ROOT . DS . "Core";
 const VIEW_PATH = APP_PATH . DS . "Views";
 const CUSTOM_ROUTE_FILE = "Routes.php";
+const BOOTSTRAP_FILE = "Bootstrap.php";
 
 /**
  * Autoloader
@@ -51,6 +52,17 @@ register_shutdown_function("Core\Error::shutdownHandler");
  *
  */
 require_once CORE_PATH . DS . "helpers" . DS . "autoloader.php";
+
+/**
+ * Additionaly Liabrary (vendor) bootstap file
+ */
+if( ! empty(BOOTSTRAP_FILE) ) {
+
+	$_bootstrap_file_path = APP_PATH . DS . BOOTSTRAP_FILE;
+	if ( is_readable($_bootstrap_file_path) ) {
+		require $_bootstrap_file_path;
+	}
+}
 
 
 /**
