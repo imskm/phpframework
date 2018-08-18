@@ -36,7 +36,7 @@ class Session
 
 	public static function get($key)
 	{
-		return $_SESSION[$key] ? $_SESSION[$key] : null;
+		return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
 	}
 
 	public static function delete($key)
