@@ -1,6 +1,6 @@
 <?php
 
-//namespace includes;
+namespace Core;
 
 /**
  * Upload Files be it Image, text, video, etc.

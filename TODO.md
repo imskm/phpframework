@@ -53,8 +53,20 @@
 * In Validation class, unique() mehtod and other mehtods that need to access database uses old way to connect to database. Correct this.
 * Remove line 74 from Error.php Core class and add this line (new View(VIEW_PATH))->render("$code.php"); as our View rendering class has changed.
 * Add response json encoded data in View class
-* Add strict routing system. If a route is setup with id param then don't dispatch the route to the respective controller if id param is missing.
 * Test Validator class's required method on input as 0. It emmit error
+
+## Routing
+* Add strict routing system. If a route is setup with id param then don't dispatch the route to the respective controller if id param is missing.
+* Routing : Variable routing does not work sometime. When the sequence of route add method is changed then it works. Sample code. Add admin route does not get dispatched thorws error. And when the sequence is changed (admin goes up and login goes down) it works.
+```
+	$router->add('login', ['controller' => 'Auth', 'action' => 'login', 'namespace' => 'Auth']);
+	$router->add('auth/{action}', ['controller' => 'Auth', 'namespace' => 'Auth']);
+	$router->add('{controller}', ['action' => 'index']);
+
+	$router->add('admin', ['controller' => 'Home', 'action' => 'index', 'namespace' => 'Admin']);
+	$router->add('admin/{controller}/{action}', ['namespace' => 'Admin']);
+	$router->add('admin/{controller}/{id:\d+}/{action}', ['namespace' => 'Admin']);
+```
 
 
 
