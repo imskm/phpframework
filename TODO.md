@@ -81,6 +81,7 @@
 
 ## Model Bugs
 * On line 95, inapropriate checking of class existence, use isset() instead.
+* first() methods blindly tries to return 0th element from the result set even when it is not present.
 
 
 
