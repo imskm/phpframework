@@ -77,7 +77,10 @@
 
 
 
+# BUGS
 
+## Model Bugs
+* On line 95, inapropriate checking of class existence, use isset() instead.
 
 
 
