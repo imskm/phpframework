@@ -55,6 +55,12 @@
 * Add response json encoded data in View class
 * Test Validator class's required method on input as 0. It emmit error
 
+---
+# New Requirements and Development of Framework (25.08.2018)
+---
+## Model
+* Re-design the Model class in such a way that when a record is fetched by a User Model class then the db result must be the object of User Model class so that further operation imposed by model methods can be performed on the db result data. It is very much required for the easy CRUD operation. Currently the Core Model class does not have this feature and I did not thought of this problem, and I was doing the OOP totaly wrong way. Now I realised what I was doing wrong. So correct it ASAP.
+
 ## Routing
 * Add strict routing system. If a route is setup with id param then don't dispatch the route to the respective controller if id param is missing.
 * Routing : Variable routing does not work sometime. When the sequence of route add method is changed then it works. Sample code. Add admin route does not get dispatched thorws error. And when the sequence is changed (admin goes up and login goes down) it works.
