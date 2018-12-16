@@ -40,7 +40,7 @@
 
 * Rethink on the design of Method
 	1. What each method should return?
-	1. Each method should return data / object according to function that mathod carries
+	1. Each method should return data / object according to function that method carries
 
 * Add unset() mehtod in Base calss to allow user to unset a property in Base class
 * Add fails() method in Validator class
@@ -59,7 +59,7 @@
 # New Requirements and Development of Framework (25.08.2018)
 ---
 ## Model
-* Re-design the Model class in such a way that when a record is fetched by a User Model class then the db result must be the object of User Model class so that further operation imposed by model methods can be performed on the db result data. It is very much required for the easy CRUD operation. Currently the Core Model class does not have this feature and I did not thought of this problem, and I was doing the OOP totaly wrong way. Now I realised what I was doing wrong. So correct it ASAP.
+* Re-design the Model class in such a way that when a record is fetched by a User Model class then the db result must be the object of User Model class so that further operation imposed by model methods can be performed on the db result data. It is very much required for the easy CRUD operation. Currently the Core Model class does not has this feature and I did not thought of this problem, and I was doing the OOP totaly wrong way. Now I realised what I was doing wrong. So correct it ASAP.
 
 ## Routing
 * Add strict routing system. If a route is setup with id param then don't dispatch the route to the respective controller if id param is missing.
@@ -89,6 +89,10 @@
 * On line 95, inapropriate checking of class existence, use isset() instead.
 * first() methods blindly tries to return 0th element from the result set even when it is not present.
 
+## Validator Bugs
+* Validation which need to access database is using old Connection class change it to new Connector class
 
+## Error and Exception Handler
+* Current `Error and Exception handler` does not handle `PHP WARNING` and `PHP NOTICE`. So Improve your Error and Exception handler class. It must catch the `WARNING` and `NOTICE` as well and immidiately stop execution and show the fatal error.
 
 
