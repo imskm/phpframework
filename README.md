@@ -172,12 +172,12 @@ forget_post();
 ##### __Retrieve old POST data__
 In your view page/somewhere (where you want), call old post function like this.
 ```php
-// it will return the value of the field name `field_name` if it exist else
+// it will return the value of the field `field_name` if it exist else
 // empty string ""
 old_post('field_name');
 
 // You can also provide default value to this function. It will return the
-// value of the field name `field_name` if it exist else default value
+// value of the field `field_name` if it exist else default value
 // `default_value` that you have passed as second argument.
 old_post('field_name', 'default_value');
 ```
