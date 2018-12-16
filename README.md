@@ -151,3 +151,30 @@ Auth::user();
 ```php
 Auth::logout();
 ```
+
+# Last POST data pre-popultion in form
+On form validation error you can pre-populate the form with last POST data. This feature is new and only remembers POST data not GET data.
+
+##### __Setup the remember and forget call__
+This must be called before the validation, where you redirect user back to form page, inside POST route method (Controller action/method where you are posting form to). After validation use should call forget post to destroy the last POST data.
+```php
+remember_post();
+
+// Validate your form here. If found error then redirect back to
+// form page.
+
+forget_post();
+```
+
+##### __Retrieve old POST data__
+In your view page/somewhere (where you want), call old post function like this.
+```php
+// it will return the value of the field name `field_name` if it exist else
+// empty string ""
+old_post('field_name');
+
+// You can also provide default value to this function. It will return the
+// value of the field name `field_name` if it exist else default value
+// `default_value` that you have passed as second argument.
+old_post('field_name', 'default_value');
+```
