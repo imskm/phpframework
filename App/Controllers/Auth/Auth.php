@@ -56,6 +56,16 @@ class Auth extends \Core\Controller
 		return $this->view->render("Auth/register.php");
 	}
 
+	protected function store()
+	{
+		remember_post();
+		//
+		// do validation here
+		//
+		forget_post();
+		redirect('auth/register');
+	}
+
 	public function logout()
 	{
 
