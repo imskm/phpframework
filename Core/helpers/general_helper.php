@@ -88,3 +88,79 @@ function genOptionHtmlTag($from, $to, $selected = null)
 }
 
 
+
+/**
+ * --------------------------------------------------------
+ *  Remember last post data
+ * --------------------------------------------------------
+ * These four functions are for handling last post data
+ * this is useful when we need to pre-populate the form
+ * when a validation error occurs and we redirect back
+ * to previous page.
+ *
+ * Usage:
+ * o When you need to remember last post request, then call
+ *    remember_post();
+ *
+ * o Retrieve old post data in view
+ *    old_post('name', $default_value = 'Guest');
+ *
+ * o Check old post data exist or not
+ *    has_remembered_post();
+ *
+ * o Destroy when you used it and no longer needed.
+ *   Best place to use this function is after validation
+ *   of form in post route.
+ *   forget_post();
+ *
+ *
+ * Example:
+ *    First call the remember_post() function above validation
+ *    inside post route method.
+ *    public function store()
+ *    {
+ *     		remember_post();
+ *			// do you validation stuff here
+ *			// if validation has error then it will redirect
+ * 			// back to previous page immediately.
+ *			forget_post();
+ *    }
+ *
+ *    Retrieve old post data in view
+ *    old_post('name');
+ *
+ */
+function remember_post()
+{
+	$sess_name = \App\Config::get('old_post_sessname');
+	if (!isset($_POST)){
+		return false;
+	}
+
+	\Core\Session::set($sess_name, $_POST);
+	return true;
+}
+
+function old_post($key, $default_value = "")
+{
+	$sess_name = \App\Config::get('old_post_sessname');
+	if (!\Core\Session::exist($sess_name)){
+		return $default_value;
+	}
+
+	return isset($_SESSION[$sess_name][$key])? $_SESSION[$sess_name][$key] : $default_value;
+}
+
+function has_remembered_post()
+{
+	$sess_name = \App\Config::get('old_post_sessname');
+
+	return \Core\Session::exist($sess_name);
+}
+
+function forget_post()
+{
+	$sess_name = \App\Config::get('old_post_sessname');
+
+	\Core\Session::delete($sess_name);
+}
