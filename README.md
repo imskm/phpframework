@@ -157,6 +157,7 @@ On form validation error you can pre-populate the form with last POST data. This
 
 __BUG__: One bug is that it will not clean up the old post data when user submits the form and on error user leaves the form as it is and do not submit the valid form again. Consecuenses of this is, that when user lands again on form page then his form will be prepopulated by old data that was hanging around in the session (of course this will only happen when user lands again on the form page before session expires).
 
+
 ##### __Setup the remember and forget call__
 This must be called before the validation, where you redirect user back to form page, inside POST route method (Controller action/method where you are posting form to). After validation use should call forget post to destroy the last POST data.
 ```php
