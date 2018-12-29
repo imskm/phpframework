@@ -338,6 +338,22 @@ abstract class Model extends Query
 	}
 
 	/**
+	 * Executes raw sql
+	 *
+	 *
+	 */
+	public static function raw($sql, array $params = array())
+	{
+		$instance = self::getInstance();
+		$instance->is_fetchable = true;
+
+		$instance->setRawSql($sql, $params);
+		$instance->query($sql, array_keys($params));
+
+		return $instance;
+	}
+
+	/**
 	 * Performs insert operation.
 	 *
 	 * @return bool

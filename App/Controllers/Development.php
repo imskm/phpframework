@@ -2,11 +2,12 @@
 
 namespace App\Controllers;
 
-use \Core\Validator;
 use \Core\View;
+use \Tests\Test;
 use \Core\Database;
 use App\Models\Post;
-use \Tests\Test;
+use App\Models\User;
+use \Core\Validator;
 
 
 /**
@@ -99,5 +100,17 @@ class Development extends \Core\Controller
 	{
 		$test = new Test;
 		$test->doTesting();
+	}
+
+	public function rawSqlTest()
+	{
+		// $sql = "SELECT * FROM users WHERE id = :id";
+		$sql = "SELECT * FROM users WHERE name LIKE :name";
+		$users = User::raw($sql, [
+			// 'id' => 8,
+			'name' => "%%%ES%",
+		])->get();
+
+		var_dump($users);
 	}
 }

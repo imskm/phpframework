@@ -226,5 +226,18 @@ class Query extends \Core\Base
 		return true;
 	}
 
+	public function setRawSql($sql, array $params = array())
+	{
+		if ($params) {
+			foreach ($params as $column => $value) {
+				$this->{$column} = $value;
+			}
+		}
+
+		$this->sql = $sql;
+
+		return $this;
+	}
+
 
 }
