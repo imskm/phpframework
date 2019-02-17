@@ -91,6 +91,14 @@
 
 ## Validator Bugs
 * Validation which need to access database is using old Connection class change it to new Connector class
+* Validation class is not working correctly, some of the issues are:
+	- When a required rules is added with other rules then the validation sequence is not performed as expected. Example: "required|email", error says email is not valid instead of "email is required"
+	- Validation of max, min rules and other can be optimized using isset(), check like isset(elem[size + 1]) then max boundary exceeded
+	- required rule on non existing field causes exception which is not right for validation because of this other validation erros are destroyed
+	- currently some rules like max, min, and size are static, meaning it only works for string type, It should work on other type also like int, float double
+	- size rule should also work on file size checking
+	- currently Validation class does not have any validation rules for file upload
+	- Validation class does not have any good API to check for specific error on a field. This will help in showing and checking error on individual field
 
 ## Error and Exception Handler
 * Current `Error and Exception handler` does not handle `PHP WARNING` and `PHP NOTICE`. So Improve your Error and Exception handler class. It must catch the `WARNING` and `NOTICE` as well and immidiately stop execution and show the fatal error.

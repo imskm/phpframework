@@ -55,6 +55,14 @@ $result = $user->get();
 $result = $user->first();
 ```
 
+#### __Raw SQL query execution__
+```php
+$sql = "SELECT * FROM users WHERE name LIKE :name";
+$users = User::raw($sql, [
+		'name' => "%ES%",
+])->get();
+```
+
 # View Interfaces
 
 ##### __Using a template file__
@@ -181,3 +189,4 @@ old_post('field_name');
 // `default_value` that you have passed as second argument.
 old_post('field_name', 'default_value');
 ```
+
