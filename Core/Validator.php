@@ -86,6 +86,7 @@ class Validator
 			// Itterate over each rule and call the method
 			foreach ($this->rules as $rule => $params) {
 
+
 				if($params) { // rule has argument
 
 					$method 	= $rule;
@@ -108,8 +109,12 @@ class Validator
 
 					// calling method without argument
 					if(!$this->$method()) {
+						// Break out of loop and don't check the next rule
+						// since first rule is not passed then we don't check
+						// for next rule on the current input field
 
-						// TODO
+						// TODO: we can do something from users pov then break
+						break;
 					}
 
 				}
