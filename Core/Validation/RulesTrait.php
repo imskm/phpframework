@@ -139,7 +139,7 @@ trait RulesTrait
 		}
 
 		$sql = sprintf("SELECT 1 FROM %s WHERE %s = :%s", $parts[0], $parts[1], $parts[1]);
-		if($this->dbQuickCheck($sql, ["$parts[1]" => $data])) {
+		if(!$this->dbQuickCheck($sql, ["$parts[1]" => $data])) {
 			$this->setError($field, __FUNCTION__, "$data does not exist.");
 			return false;
 		}
@@ -186,7 +186,7 @@ trait RulesTrait
 		}
 
 		// If $data is a string then check the string lenth exceeds limit
-		if(is_string($data) && isset($data[(int) $args])) {
+		if(!is_numeric($data) && is_string($data) && isset($data[(int) $args])) {
 			$this->setError($field, __FUNCTION__, "$field length must not exceed $args characters.");
 			return false;
 		}
@@ -203,7 +203,7 @@ trait RulesTrait
 		}
 
 		// If $data is a string then check the string lenth
-		if(is_string($data) && !isset($data[((int) $args) - 1])) {
+		if(!is_numeric($data) && is_string($data) && !isset($data[((int) $args) - 1])) {
 			$this->setError($field, __FUNCTION__, "$field length must be atleast $args characters.");
 			return false;
 		}
@@ -233,9 +233,9 @@ trait RulesTrait
 
 	protected function phone($field, $data)
 	{
-		$pattern = "/^[0-9]+$/";
+		$pattern = "/^[0-9]{10}$/";
 
-		if(!preg_match($pattern, $data) || !$this->size($field, $data, 10)) {
+		if(!preg_match($pattern, $data)) {
 			$this->setError($field, __FUNCTION__, "Phone number is not valid.");
 			return false;
 		}
@@ -257,13 +257,13 @@ trait RulesTrait
 
 	protected function size($field, $data, $args)
 	{
-		if (is_string($data) && strlen($data) !== (int)$args) {
-			$this->setError($field, __FUNCTION__, "Size of $field should be equal to $args");
+		if (is_numeric($data) && (float) $data !== (float) $args) {
+			$this->setError($field, __FUNCTION__, "Size of $field should be equal to $args.");
 			return false;
 		}
 
-		if (is_numeric($data) && (float) $data !== (float) $args) {
-			$this->setError($field, __FUNCTION__, "Size of $field should be equal to $args.");
+		if (!is_numeric($data) && is_string($data) && strlen($data) !== (int)$args) {
+			$this->setError($field, __FUNCTION__, "Size of $field should be equal to $args");
 			return false;
 		}
 
