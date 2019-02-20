@@ -47,7 +47,7 @@ class Validator
 	 * rules doesn't pass.
 	 * This property can be overridden by user in his child class
 	 */
-	protected $bail = false;
+	protected $bail = true;
 
 	/**
 	 * @var array 				array of error messages of failed rules
@@ -146,7 +146,6 @@ class Validator
 						// TODO: we can do something from users pov then break
 						if ($this->bail) break;
 					}
-
 				}
 			}
 
@@ -165,6 +164,11 @@ class Validator
 		return isset($this->errors[$key]) ? true : false;
 	}
 
+	public function errors()
+	{
+		return $this->errors;
+	}
+
 	protected function checkRules($rules)
 	{
 		$rules = str_replace(" ", "", $rules);
@@ -176,40 +180,43 @@ class Validator
 		foreach ($rules_parts as $rule_part) {
 
 			if(preg_match($pattern, $rule_part, $matches)) {
-				$rule = $matches[1];
-				// echo "Rule $rule <br>";
+				$rule = $this->getRuleIfExist($matches[1]);
 
 				// If rule has argument then store rule with argument
 				// $matches[2] is argument of rule
 				if( isset($matches[2]) ) {
-					$this->rules[ $matches[1] ] = $matches[2];
+					$this->rules[ $rule ] = $matches[2];
 
 				} else {	// else just store rule with null argument
-					$this->rules[ $matches[1] ] = null;
+					$this->rules[ $rule ] = null;
 				}
 
 			} else {
-				$rule = $rule_part;
-				// echo "Rule $rule <br>";
-				$this->rules[ $rule_part ] = null;
-			}
-
-			// Checkin if rule exist or not
-			// TODO: suffix "rule" in $rule then check the method exist
-			//       user must create rule suffixed with "rule" word
-			if(!$this->isRuleAllowed($rule)) {
-				// check if user's rule exist or not
-				$custom_rule = $rule."Rule";
-				if (!$this->userMethodExist($custom_rule)) {
-					throw new \Exception("Rule " . $rule . " Not found.");
-				}
+				$rule = $this->getRuleIfExist($rule_part);
+				$this->rules[ $rule ] = null;
 			}
 		}
 
-		// echo "<br>==============<br>";
-		// var_dump($this->rules);
-		// exit;
 		return true;
+	}
+
+	/**
+	 * Checkin if rule exist or not
+	 * TODO: suffix "_rule" in $rule then check the method exist
+	 *       user must create rule suffixed with "_rule" word	
+	 */
+	protected function getRuleIfExist($rule)
+	{
+		if(!$this->isRuleAllowed($rule)) {
+			// check if user's rule exist or not
+			$custom_rule = $rule."_rule";
+			if (!$this->userMethodExist($custom_rule)) {
+				throw new \Exception("_rule " . $rule . " Not found.");
+			}
+			$rule = $custom_rule;
+		}
+
+		return $rule;
 	}
 
 	protected function getInputValue($field = "")
