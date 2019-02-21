@@ -30,7 +30,7 @@ class ErrorMessageBag implements Countable
 	public function hasError($key = "")
 	{
 		// Check if key exist
-		if (!$this->isExists($key)) {
+		if ($key && !$this->isExists($key)) {
 			return false;
 		}
 
