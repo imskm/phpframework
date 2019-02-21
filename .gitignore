@@ -2,4 +2,3 @@ vendor
 App/Config.php
 public/assets
 *.swp
-Tests/
