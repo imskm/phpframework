@@ -1,8 +1,10 @@
 <?php
 namespace Core\Validation;
 
+use \Core\Session;
 use \Core\Database\Connector;
 use \Core\Validation\RulesTrait;
+use \Core\Validation\ErrorMessageBag;
 
 /**
  * Validator Class
@@ -63,20 +65,27 @@ class Validator
 	 *			],
 	 * 	]
 	 */
-	public $errors;
+	public $errors = [];
 
 	/**
 	 * Custom error property name defined by user (it must be custom_messages)
 	 */
-	protected $user_messages_property_name = 'custom_messages';
+	private $user_messages_property_name = 'custom_messages';
 
 	/**
 	 * HTML Message template defined by user
 	 */
-	protected $user_message_template_name = 'message_template';
+	private static $user_message_template_name = 'message_template';
 
 	/**
-	 * Reflection object
+	 * Session storage name for storing validation errors persistently
+	 */
+	private static $session_storage = 'VAL_ERRORS_BAG';
+	private static $session_storage_errors_name = 'messages';
+	private static $session_storage_template_name = 'template';
+
+	/**
+	 * PHP Reflection object
 	 */
 	protected $reflection;
 
@@ -156,17 +165,7 @@ class Validator
 			$this->rules = array();
 		}
 
-		return true;
-	}
-
-	public function hasError($key)
-	{
-		return isset($this->errors[$key]) ? true : false;
-	}
-
-	public function errors()
-	{
-		return $this->errors;
+		$this->storeErorrs();
 	}
 
 	protected function checkRules($rules)
@@ -223,13 +222,22 @@ class Validator
 	{
 		switch ($this->reqMethod) {
 			case 'GET':
-				if(!empty($field)) return $_GET[$field];
+				if($field && isset($_GET[$field])) {
+					return $_GET[$field];
+				}
+
 				return isset($_GET[$this->validateField])? $_GET[$this->validateField] : "";
 				break;
+
 			case 'POST':
-				if(!empty($field)) return $_POST[$field];
+			case 'PUT':
+				if($field && isset($_POST[$field])) {
+					return $_POST[$field];
+				}
+
 				return isset($_POST[$this->validateField])? $_POST[$this->validateField] : "";
 				break;
+
 			default :
 				throw new \Exception("$this->reqMethod not found.");
 		}
@@ -242,38 +250,25 @@ class Validator
 
 	protected function setCurrentValidation($field)
 	{
+		$this->validateField = $field;
+		$this->validateValue = $this->getInputValue($field);
+		return true;
+	}
 
-		switch ($this->reqMethod) {
+	protected function storeErorrs()
+	{
+		$bag[self::$session_storage_errors_name] = $this->errors;
+		$bag[self::$session_storage_template_name] = $this->getMessageTemplate();
+		Session::set(self::$session_storage, $bag);
+	}
 
-			case "GET":
-				if(!isset($_GET[$field])) {
-					throw new \Exception("$field input field not found.");
-				}
-
-				$this->validateField = $field;
-				$this->validateValue = $_GET[$field];
-
-				break;
-
-			case "POST":
-				if(!isset($_POST[$field])) {
-					throw new \Exception("$field input field not found.");
-				}
-
-				$this->validateField = $field;
-				$this->validateValue = $_POST[$field];
-				break;
-
-			case "PUT":
-				if(!isset($_PUT[$field])) {
-					throw new \Exception("$field input field not found.");
-				}
-
-			default :
-				throw new \Exception("$this->reqMethod not found.");
+	protected function getMessageTemplate()
+	{
+		if (!$this->reflection->hasProperty(self::$user_message_template_name)) {
+			return "";
 		}
 
-		return true;
+		return $this->{$this->user_message_template_name};
 	}
 
 	protected function setError($field, $rule, $message)
@@ -317,5 +312,50 @@ class Validator
 		$this->errors[$field][$rule] = $this
 										->{$this->user_messages_property_name}
 										[$field][$rule];
+	}
+
+	public function hasError()
+	{
+		return $this->errors? true : false;
+	}
+
+	public function errors()
+	{
+		return $this->errors;
+	}
+
+	/**
+	 * Method for retrieving error messages flushed in session
+	 * this should be called for retrieving any errors occured
+	 * in previous validation request
+	 */
+	public static function validationErrors()
+	{
+		$errors = self::getErrorsFromSession();
+		$template = self::getMessageTemplateFromSession();
+
+		Session::delete(self::$session_storage);
+
+		return new ErrorMessageBag($errors, $template);
+	}
+
+	private static function getErrorsFromSession()
+	{
+		$bag = Session::get(self::$session_storage);
+		if (!$bag) {
+			return [];
+		}
+
+		return $bag[self::$session_storage_errors_name];
+	}
+
+	private static function getMessageTemplateFromSession()
+	{
+		$bag = Session::get(self::$session_storage);
+		if (!$bag) {
+			return "";
+		}
+
+		return $bag[self::$session_storage_template_name];
 	}
 }
