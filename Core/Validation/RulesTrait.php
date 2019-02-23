@@ -35,6 +35,10 @@ trait RulesTrait
 		"optional"			=> true,
 	];
 
+	/**
+	 * Numeric rules
+	 */
+	protected $numeric_rules = ['numeric', 'integer'];
 
 
 	protected function isRuleAllowed($rule)
@@ -179,15 +183,13 @@ trait RulesTrait
 
 	protected function max($field, $data, $args)
 	{
-		// If $data is a number then compare it like number
-		if(is_numeric($data) && (float) $data > (float) $args) {
-			$this->setError($field, __FUNCTION__, "$field must not exceeds $args.");
-			return false;
-		}
+		// Returns the size that will be compared against $args
+		// getSize() method takes care of couting lenth of data.
+		$size = $this->getSize($field, $data);
 
-		// If $data is a string then check the string lenth exceeds limit
-		if(!is_numeric($data) && is_string($data) && isset($data[(int) $args])) {
-			$this->setError($field, __FUNCTION__, "$field length must not exceed $args characters.");
+		// If $size exceeds $args value then set error and return false
+		if($size > (float) $args) {
+			$this->setError($field, __FUNCTION__, "$field must not exceeds $args.");
 			return false;
 		}
 
@@ -196,15 +198,13 @@ trait RulesTrait
 
 	protected function min($field, $data, $args)
 	{
-		// If $data is a number then compare it like number
-		if(is_numeric($data) && (float) $data < (float) $args) {
-			$this->setError($field, __FUNCTION__, "$field must be atleast $args.");
-			return false;
-		}
+		// Returns the size that will be compared against $args
+		// getSize() method takes care of couting lenth of data.
+		$size = $this->getSize($field, $data);
 
-		// If $data is a string then check the string lenth
-		if(!is_numeric($data) && is_string($data) && !isset($data[((int) $args) - 1])) {
-			$this->setError($field, __FUNCTION__, "$field length must be atleast $args characters.");
+		// If $data is a number then compare it like number
+		if((float) $size < (float) $args) {
+			$this->setError($field, __FUNCTION__, "$field must be atleast $args.");
 			return false;
 		}
 
@@ -257,13 +257,12 @@ trait RulesTrait
 
 	protected function size($field, $data, $args)
 	{
-		if (is_numeric($data) && (float) $data !== (float) $args) {
-			$this->setError($field, __FUNCTION__, "Size of $field should be equal to $args.");
-			return false;
-		}
+		// Returns the size that will be compared against $args
+		// getSize() method takes care of couting lenth of data.
+		$size = $this->getSize($field, $data);
 
-		if (!is_numeric($data) && is_string($data) && strlen($data) !== (int)$args) {
-			$this->setError($field, __FUNCTION__, "Size of $field should be equal to $args");
+		if ((float) $size !== (float) $args) {
+			$this->setError($field, __FUNCTION__, "Size of $field should be equal to $args.");
 			return false;
 		}
 
@@ -309,5 +308,23 @@ trait RulesTrait
 		}
 
 		return $st->execute() && (bool)$st->fetch();
+	}
+
+	/**
+	 * If the $field has any numeric rules then size is $data itself
+	 * else size is count of characters
+	 *
+	 * @return int | float
+	 */
+	protected function getSize($field, $data)
+	{
+		$has_numeric = $this->fieldHasRule($field, $this->numeric_rules);
+		if ($has_numeric && is_numeric($data)) {
+			return $data;
+		}
+
+		// TODO: Need to implement File size checking
+
+		return strlen($data);
 	}
 }
