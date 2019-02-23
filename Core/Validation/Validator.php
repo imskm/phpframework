@@ -232,8 +232,10 @@ class Validator
 			case 'POST':
 			case 'PUT':
 				if($field && isset($_POST[$field])) {
+					// echo "$field\n $_POST[$field]\n";
 					return $_POST[$field];
 				}
+
 
 				return isset($_POST[$this->validateField])? $_POST[$this->validateField] : "";
 				break;
@@ -357,5 +359,21 @@ class Validator
 		}
 
 		return $bag[self::$session_storage_template_name];
+	}
+
+
+	protected function fieldHasRule($field, $rules)
+	{
+		if (is_array($rules)) {
+			foreach ($rules as $rule) {
+				if (array_key_exists($rule, $this->rules)) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		return array_key_exists($rules, $this->rules);
 	}
 }
