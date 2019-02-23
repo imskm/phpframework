@@ -20,6 +20,7 @@ class ValidatorRuleTest
 
 	public function test_order_of_processing_rules()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['first_name'] = 'n4'; // gmail@gmail
 		$_GET['phone'] 		= ''; // gmail@gmail
@@ -37,6 +38,7 @@ class ValidatorRuleTest
 
 	public function test_validation_class_is_working_or_not()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['first_name'] = ''; // gmail@gmail
 		$_GET['phone'] 		= ''; // gmail@gmail
@@ -55,6 +57,7 @@ class ValidatorRuleTest
 
 	public function test_alpha_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['first_name'] = 'muktar'; // rule should pass
 		$_GET['last_name'] = 'shek muktar'; // rule should fail
@@ -72,6 +75,7 @@ class ValidatorRuleTest
 
 	public function test_alpha_dash_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['prod_name_pass'] = 'silver-product';
 		$_GET['prod_name_fail'] = 'silver-01';
@@ -89,6 +93,7 @@ class ValidatorRuleTest
 
 	public function test_alpha_num_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['prod_name_pass'] = 'silverproduct01';
 		$_GET['prod_name_fail'] = 'silver-01';
@@ -106,6 +111,7 @@ class ValidatorRuleTest
 
 	public function test_alpha_space_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['prod_name_pass'] = 'silver product';
 		$_GET['prod_name_fail'] = 'silver-';
@@ -123,6 +129,7 @@ class ValidatorRuleTest
 
 	public function test_confirmed_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['password'] = '12345678';
 		$_GET['confirm_password_pass'] = '12345678';
@@ -141,6 +148,7 @@ class ValidatorRuleTest
 
 	public function test_email_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['email_pass'] = 'skmukhtar@gmail.com';
 		$_GET['email_fail'] = 'skmukhtar@gmail';
@@ -158,6 +166,7 @@ class ValidatorRuleTest
 
 	public function test_exist_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['user_pass'] = '2';
 		$_GET['user_fail'] = '1000';
@@ -175,6 +184,7 @@ class ValidatorRuleTest
 
 	public function test_in_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['gender_pass'] = '2';
 		$_GET['gender_fail'] = '4';
@@ -192,14 +202,15 @@ class ValidatorRuleTest
 
 	public function test_max_validation_rule_for_number()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['amount_pass'] = '2000';
 		$_GET['amount_fail'] = '3000.5';
 
 		$validator = new Validator;
 		$validator->validate($this->method, $rules = [
-			'amount_pass' 	=> 'required|max:3000',
-			'amount_fail' 	=> 'required|max:3000',
+			'amount_pass' 	=> 'required|max:3000|numeric',
+			'amount_fail' 	=> 'required|numeric|max:3000',
 		]);
 
 		$errors = $validator->errors();
@@ -209,6 +220,7 @@ class ValidatorRuleTest
 
 	public function test_max_validation_rule_for_string()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['product_name_pass'] = 'Silver product';
 		$_GET['product_name_fail'] = 'This product name is so long that will fail max';
@@ -226,14 +238,15 @@ class ValidatorRuleTest
 
 	public function test_min_validation_rule_for_number()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['amount_pass'] = '2000.00';
 		$_GET['amount_fail'] = '1999.99';
 
 		$validator = new Validator;
 		$validator->validate($this->method, $rules = [
-			'amount_pass' 	=> 'required|min:2000',
-			'amount_fail' 	=> 'required|min:2000',
+			'amount_pass' 	=> 'required|numeric|min:2000',
+			'amount_fail' 	=> 'required|numeric|min:2000',
 		]);
 
 		$errors = $validator->errors();
@@ -243,6 +256,7 @@ class ValidatorRuleTest
 
 	public function test_min_validation_rule_for_string()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['product_name_pass'] = 'Silver product';
 		$_GET['product_name_fail'] = 'short';
@@ -260,6 +274,7 @@ class ValidatorRuleTest
 
 	public function test_optional_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['address_line_1_pass'] = '';
 		$_GET['address_line_2_pass'] = 'B.L. No.-5, N.C. Road, 24pgs (N)';
@@ -279,6 +294,7 @@ class ValidatorRuleTest
 
 	public function test_phone_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['phone_1_pass'] = '9331926606';
 		$_GET['phone_2_fail'] = '+919331926606'; // special char +
@@ -302,6 +318,7 @@ class ValidatorRuleTest
 
 	public function test_required_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['first_name_1_pass'] = 'Mukhtar';
 		$_GET['first_name_2_fail'] = '';
@@ -323,14 +340,15 @@ class ValidatorRuleTest
 
 	public function test_size_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['file_size_pass'] = '1000';
-		$_GET['file_size_fail'] = '999.5';
+		$_GET['file_size_fail'] = '999';
 
 		$validator = new Validator;
 		$validator->validate($this->method, $rules = [
-			'file_size_pass' 	=> 'required|size:1000',
-			'file_size_fail' 	=> 'required|size:1000',
+			'file_size_pass' 	=> 'required|integer|size:1000',
+			'file_size_fail' 	=> 'required|integer|size:1000',
 		]);
 
 		$errors = $validator->errors();
@@ -340,6 +358,7 @@ class ValidatorRuleTest
 
 	public function test_size_validation_rule_for_string()
 	{
+		$_GET = array();
 		// NOTE: size rule will always fail if the data is
 		// number. This rule is not appropriate for number
 		// Do not use it for checking number size.
@@ -360,6 +379,7 @@ class ValidatorRuleTest
 
 	public function test_unique_validation_rule()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['email_unique_pass'] = 'unique.email@gmail.com';
 		$_GET['email_unique_fail'] = 'sadaf@gmail.com';
@@ -382,6 +402,7 @@ class ValidatorRuleTest
 
 	public function test_validation_rule_does_not_exist()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['first_name'] = 'somedata';
 
@@ -404,6 +425,7 @@ class ValidatorRuleTest
 
 	public function test_validation_custom_rule_exist()
 	{
+		$_GET = array();
 		// Create form fields
 		$_GET['first_name'] = 'somedata';
 
@@ -427,25 +449,22 @@ class ValidatorRuleTest
 
 	public function test_validation_for_field_that_does_not_exist()
 	{
+		$_GET = array();
 		// Create form fields
 		// THERE ARE NO FIELD TO VALIDATE.
 		// Therefore validation for non existing field
+		$_GET['first_name'] = 'test name';
 
 		$validator = new Validator;
 
-		try {
-			$validator->validate($this->method, $rules = [
-				'alien_field' 	=> 'required', 	// alien_field does not exist
-			]);
-			$this->passed();
-
-			return "";
-
-		} catch (\Exception $e) {
-			$this->failed();
-
-			return $e->getMessage();
-		}
+		$validator->validate($this->method, $rules = [
+			'alien_field' 	=> 'required|alpha_space', 	// alien_field does not exist
+			'first_name' 	=> 'required|alpha_space', 	// alien_field does not exist
+		]);
+		
+		$errors = $validator->errors();
+		echo count($errors) === 1? $this->passed() : $this->failed();
+		return $errors;
 	}
 
 	protected function passed()
