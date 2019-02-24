@@ -13,6 +13,8 @@ trait RulesTrait
 		"alpha_num"			=> true,
 		"alpha_space"		=> true,
 		"confirmed"			=> true,
+		"date"				=> true,
+		"date_equals"		=> true,
 		"digits"			=> true,
 		"email"				=> true,
 		"exist"				=> true,
@@ -106,6 +108,53 @@ trait RulesTrait
 
 		if($data !== $confirmWith) {
 			$this->setError($field, __FUNCTION__, "$field does not match with $confirm.");
+			return false;
+		}
+
+		return true;
+	}
+
+	protected function date($field, $data)
+	{
+		if (!is_string($data) || is_numeric($data) || !strtotime($data)) {
+			$this->setError($field, __FUNCTION__, "$data is invalid date");
+			return false;
+		}
+
+		$date = date_parse($data);
+        if (!checkdate($date['month'], $date['day'], $date['year'])) {
+        	$this->setError($field, __FUNCTION__, "$data is invalid date");
+			return false;
+        }
+
+		return true;
+	}
+
+	/**
+	 * compares date for equality
+	 * Note: Not perfect
+	 */
+	protected function date_equals($field, $data, $args)
+	{
+		// First check for valid date
+		if (!is_string($data) || is_numeric($data) || !strtotime($data)) {
+			$this->setError($field, __FUNCTION__, "$data is invalid date");
+			return false;
+		}
+
+		$date = date_parse($data);
+        if (!checkdate($date['month'], $date['day'], $date['year'])) {
+        	$this->setError($field, __FUNCTION__, "$data is invalid date");
+			return false;
+        }
+
+		// Intentionally used without try catch
+		// If developer gave invalid date in $args, will throw exception
+		$arg_date = new \DateTime($args);
+		$interval = $arg_date->diff(new \DateTime($data));
+
+		if ($interval->s !== 0) {
+			$this->setError($field, __FUNCTION__, "$data does not match.");
 			return false;
 		}
 
