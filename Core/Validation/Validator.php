@@ -75,7 +75,7 @@ class Validator
 	/**
 	 * HTML Message template defined by user
 	 */
-	private static $user_message_template_name = 'message_template';
+	private $user_message_template_name = 'message_template';
 
 	/**
 	 * Session storage name for storing validation errors persistently
@@ -266,11 +266,11 @@ class Validator
 
 	protected function getMessageTemplate()
 	{
-		if (!$this->reflection->hasProperty(self::$user_message_template_name)) {
+		if (!$this->reflection->hasProperty($this->user_message_template_name)) {
 			return "";
 		}
 
-		return $this->{self::$user_message_template_name};
+		return $this->{$this->user_message_template_name};
 	}
 
 	protected function setError($field, $rule, $message)
