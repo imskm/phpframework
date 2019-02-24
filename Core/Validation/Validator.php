@@ -270,7 +270,7 @@ class Validator
 			return "";
 		}
 
-		return $this->{$this->user_message_template_name};
+		return $this->{self::$user_message_template_name};
 	}
 
 	protected function setError($field, $rule, $message)
