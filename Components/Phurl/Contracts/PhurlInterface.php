@@ -1,0 +1,3 @@
+<?php
+
+namespace Phurl\Contracts;
