@@ -1,5 +1,6 @@
 # Phurl API usage
 
+**Phurl ver 1.0**
 Phurl, a cURL based PHP HTTP client, made for making API calls from php code.
 Very useful for rapidly building new interesting API based mobile recharge, money transfer, etc Apps.
 
