@@ -36,6 +36,7 @@ $phurl = new Phurl($is_dev = true);
 // Call withParams() methods before get() call
 // Always call get() / post() / put() / delete() any HTTP method
 // at last
+// https://jsonplaceholder.typicode.com/posts?userId=1
 $get_result = $phurl->withParams([
 		'userId'	=> 1,
 	])->get($url = 'https://jsonplaceholder.typicode.com/posts');
