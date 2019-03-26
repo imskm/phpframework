@@ -6,13 +6,19 @@ API provider website https://jolosoft.com (for DMT), https://joloapi.com (for re
 * Phurl package (developed by https://github.com/imskm)
 * Phurl package depends on cURL
 
-## Create Jolo object
+## Create JoloBank object
 ```php
 // Import Phurl class
 use Components\Phurl\Phurl;
 use Components\JoloBank\JoloBank;
 
+
+// Instantiate JoloBank instance
+// $phurl Phurl object  Handles http request
+// $api_key string  API key of jolosoft account
+// $api_mode int  Mode 1 = Production, 0 = Development
 $jolo_bank = new JoloBank(new Phurl, $api_key = "250xxxxxxxxx", 0);
+
 ```
 
 ## Create an Agent (required by Jolo API)
