@@ -123,7 +123,7 @@ $jolo_bank = new JoloBank(new Phurl, $api_key = "250xxxxxxxxx", 0);
 // All the parameters are required and key must match as given in this example
 // $result is boolean, true if beneficiary created succefully else false
 $result = $jolo_bank->create(new JoloBeneficiary([
-	'phone' 				=> '9876543210',		/* regd. agent phone number */
+	'phone' 				=> '9876543210',	/* regd. agent phone number */
 	'beneficiary_name'		=> 'Spider Man',
 	'beneficiary_ifsc' 		=> '5454554',
 	'beneficiary_account_no'=> '98464654654654',
@@ -137,14 +137,16 @@ if ($result === true) {
 	$response = $jolo_bank->getResponse();
 
 	// Save the beneficiary id in database
-	$user->beneficiarySave($response->beneficiaryid);	/* (some kind of saving call) */
+	$user->beneficiarySave(					/* (some kind of saving call) */
+		$response->beneficiaryid
+	);
 }
 
 
-// Check if otp key has value 1 in $response object. If value is 1 that means an OTP
-// is send to phone number of agent and agent must verify same for completing
-// beneficiary creation process. If value is 0 then OTP is not sent to beneficiary
-// and verification is not needed.
+// Check if otp key has value 1 in $response object. If value is 1 that means
+// an OTP is send to phone number of agent and agent must verify same for
+// completing beneficiary creation process. If value is 0 then OTP is not sent
+// to beneficiary and verification is not needed.
 if ($response->otp === 1) {
 	// do something to take otp from user using web interface and send it to beneficiary
 	// verification Jolo api route
@@ -202,8 +204,7 @@ $beneficiary = $jolo_bank->getResponse();
 
 ```
 
-
-## Create an Bank transfer
+## Create a Bank transfer
 Transfer money from your Jolo Api balance to any bank a/c which is registered by agent as beneficiary. Only registered beneficiaries are allowed to make money transfer
 
 ```php
@@ -217,11 +218,11 @@ $jolo_bank = new JoloBank(new Phurl, $api_key = "250xxxxxxxxx", 0);
 // All the parameters are required and key must match as given in this example
 // $result is boolean, true if transfer was successful else false
 $result = $jolo_bank->create(new JoloBankTransfer([
-	'phone' 				=> '9876543210',		/* regd. agent phone number */
-	'beneficiaryid'			=> '98464654654654_5454554',
-	'orderid' 				=> '123',				/* set by my website */
-	'amount'				=> 4000,				/* amount to transfer */
-	'remarks'				=> 'new bank transfer test',
+	'phone' 			=> '9876543210',		/* regd. agent phone number */
+	'beneficiaryid'		=> '98464654654654_5454554',
+	'orderid' 			=> '123',				/* set by my website */
+	'amount'			=> 4000,				/* amount to transfer */
+	'remarks'			=> 'new bank transfer test',
 ]));
 
 // Check transfer created
@@ -249,6 +250,32 @@ if ($result === true) {
 	//     [desc] => Transfer completed successfully
 	// )
 	$user->transactinIdSave($response);	/* (some kind of saving call) */
+}
+
+
+```
+
+## Verify a Bank transfer
+You can verify a transaction was successful or not, by using this API call
+
+```php
+// Import Phurl class
+use Components\Phurl\Phurl;
+use Components\JoloBank\JoloBank;
+
+$jolo_bank = new JoloBank(new Phurl, $api_key = "250xxxxxxxxx", 0);
+
+// Verify a money transfer
+// All the parameters are required and key must match as given in this example
+// $result is boolean, true if verification was successful without any error
+// else false
+$result = $jolo_bank->verify('transfer', [
+	'txn'	=> 'A2019031056546555',	/* transaction # came as res */
+]);
+
+// Check verification of transfer
+if ($result === true) {
+	// transfer verified
 }
 
 
