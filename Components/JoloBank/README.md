@@ -166,8 +166,9 @@ $jolo_bank = new JoloBank(new Phurl, $api_key = "250xxxxxxxxx", 0);
 // $result is boolean, true if beneficiary verification was successful else false
 // Note: OTP in test mode is always 1234
 $result = $jolo_bank->verify('beneficiary', [
-	'phone' => '9876543210',
-	'otp'   => '1234'
+	'phone' 		=> '9876543210',
+	'beneficiaryid' => '98464654654654_5454554',
+	'otp'   		=> '1234'
 ]);
 
 // Check if verification was successful
