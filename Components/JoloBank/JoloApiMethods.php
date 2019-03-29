@@ -78,4 +78,20 @@ trait JoloApiMethods
 
 		return $this->runApiRequest($url, $params);
 	}
+
+	protected function checkJoloBalance(array $params)
+	{
+		$url = $this->api_base_url . $this->balance_check_url;
+		$params = $this->prepareParamsForRequest($params);
+
+		return $this->runApiRequest($url, $params);
+	}
+
+	protected function checkJoloBank(array $params)
+	{
+		$url = $this->api_base_url . $this->bank_check_url;
+		$params = $this->prepareParamsForRequest($params);
+
+		return $this->runApiRequest($url, $params);
+	}
 }

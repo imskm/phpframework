@@ -167,6 +167,40 @@ class JoloBank
 	}
 
 	/**
+	 * Check Jolo API balance and Beneficiary Bank Account by transferring
+	 *  Rs. 1 to bank account (Jolo charges Rs. 4.54)
+	 *
+	 * @param $entity string  'balance' | 'bank'
+	 * @param $params array  Parameters for corresponding entity
+	 * @return boolean  true if check is successful else false
+	 */
+	public function check($entity, array $params = [])
+	{
+		// Construct method name that corresponds to existing validation
+		// method for check api, constructed name will look like:
+		// validateCheckJolo<Entity>
+		// validateCheckJoloBalance, validateCheckJoloBank
+		$method_name = $this->prepareMethod($entity, $prefix = 'check');
+
+		// $validate_method_name = validateCheckJolo<Entity>
+		$validate_method_name = "validate".ucfirst($method_name);
+
+		// Check Validate method for constructed method name exists
+		if (!method_exists($this, $validate_method_name)) {
+			throw new \Exception("Method $method_name does not exist");
+		}
+
+		// Call the validate method for checking required params for check
+		// api call is given, if fails then throw exception
+		if (!$this->{$validate_method_name}($params)) {
+			throw new \Exception("Invalid params given for check. check doc for required params.");
+		}
+
+		// Call the check Api method with given parameters
+		return $this->{$method_name}($params);
+	}
+
+	/**
 	 * Checks given jolo entity object is instance of any of the known
 	 *  entity or not. This is useful if user passes wrong JoloEntity object
 	 *
@@ -364,6 +398,35 @@ class JoloBank
 		return $this->validateRequiredParams(
 			$params,
 			$this->required_params_delete['beneficiary']
+		);
+	}
+
+	/**
+	 * Validates required parameters for checking Jolo API balance
+	 *  no parameter is required for this Jolo API call
+	 *
+	 * @param $params array  Empty parameter
+	 * @return boolean  true if validation passes else false
+	 */
+	protected function validateCheckJoloBalance(array $params)
+	{
+		return $this->validateRequiredParams(
+			$params,
+			$this->required_params_check['balance']
+		);
+	}
+
+	/**
+	 * Validates required parameters for checking bank account
+	 *
+	 * @param $params array  Empty parameter
+	 * @return boolean  true if validation passes else false
+	 */
+	protected function validateCheckJoloBank(array $params)
+	{
+		return $this->validateRequiredParams(
+			$params,
+			$this->required_params_check['bank']
 		);
 	}
 
