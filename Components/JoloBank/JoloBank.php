@@ -482,7 +482,7 @@ class JoloBank
 		// if null then make proper json object as Jolo API responses
 		// in case of error. This is necessary because Jolo does not
 		// response Json instead responses string in some error cases.
-		if (is_null($res_obj) && is_string($response)) {
+		if (is_null($response) || (is_null($res_obj) && is_string($response))) {
 			$res_obj = new \stdClass;
 			$res_obj->status = "FAILED";
 			$res_obj->error = $response;
