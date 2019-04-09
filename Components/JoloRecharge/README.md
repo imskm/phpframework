@@ -221,7 +221,7 @@ $response = $jolo_rech->getResponse();
 
 ```
 
-## Report dispute for last recharge transaction
+## Report dispute for previous recharge transaction
 ```php
 // Import Phurl class
 use Components\Phurl\Phurl;
