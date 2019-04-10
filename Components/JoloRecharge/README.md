@@ -420,6 +420,7 @@ $response = $jolo_rech->getResponse();
 
 ### Category codes
 Plan/Offer category type for filtering plans in jolo api call. Code will be value of `typ`.
+
 | Code     | Operator                                  |
 | -------- | ----------------------------------------- |
 | TUP      | Top-up Recharge                           |
