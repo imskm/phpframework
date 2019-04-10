@@ -61,14 +61,14 @@ class JoloRechargeOperator
 
 	public static function getByCode($code)
 	{
-		if (self::isExists($code)) {
+		if (self::isExist($code)) {
 			return "";
 		}
 
 		return self::$operators[$code];
 	}
 
-	public static function isExists($code)
+	public static function isExist($code)
 	{
 		return array_key_exists($code, self::$operators);
 	}

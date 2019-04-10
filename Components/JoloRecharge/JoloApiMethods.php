@@ -31,6 +31,15 @@ trait JoloApiMethods
 		return $this->runApiRequest($url, $params);
 	}
 
+	protected function checkBalance(array $params)
+	{
+		$url = $this->api_base_url . $this->balance_check_url;
+
+		$params = $this->prepareParamsForRequest($params);
+
+		return $this->runApiRequest($url, $params);
+	}
+
 	protected function checkPrepaid(array $params)
 	{
 		$url = $this->api_base_url . $this->recharge_check_url;
@@ -100,69 +109,37 @@ trait JoloApiMethods
 		return $this->runApiRequest($url, $params);
 	}
 
-
-
-
-
-	protected function verifyJoloAgent(array $params)
+	protected function detailMobile(array $params)
 	{
-		$url = $this->api_base_url . $this->agent_verify_url;
+		$url = $this->api_base_url . $this->mobile_finder_url;
+
 		$params = $this->prepareParamsForRequest($params);
 
 		return $this->runApiRequest($url, $params);
 	}
 
-	protected function verifyJoloBeneficiary(array $params)
+	protected function detailDth(array $params)
 	{
-		$url = $this->api_base_url . $this->beneficiary_verify_url;
+		$url = $this->api_base_url . $this->dth_finder_url;
+
 		$params = $this->prepareParamsForRequest($params);
 
 		return $this->runApiRequest($url, $params);
 	}
 
-	protected function verifyJoloTransfer(array $params)
+	protected function detailMobilePlan(array $params)
 	{
-		$url = $this->api_base_url . $this->transfer_status_check_url;
+		$url = $this->api_base_url . $this->mobile_plan_url;
+
 		$params = $this->prepareParamsForRequest($params);
 
 		return $this->runApiRequest($url, $params);
 	}
 
-	protected function detailJoloAgent(array $params)
+	protected function detailDthPlan(array $params)
 	{
-		$url = $this->api_base_url . $this->agent_detail_url;
-		$params = $this->prepareParamsForRequest($params);
+		$url = $this->api_base_url . $this->dth_plan_url;
 
-		return $this->runApiRequest($url, $params);
-	}
-	
-	protected function detailJoloBeneficiary(array $params)
-	{
-		$url = $this->api_base_url . $this->beneficiary_detail_url;
-		$params = $this->prepareParamsForRequest($params);
-
-		return $this->runApiRequest($url, $params);
-	}
-
-	protected function deleteJoloBeneficiary(array $params)
-	{
-		$url = $this->api_base_url . $this->beneficiary_delete_url;
-		$params = $this->prepareParamsForRequest($params);
-
-		return $this->runApiRequest($url, $params);
-	}
-
-	protected function checkJoloBalance(array $params)
-	{
-		$url = $this->api_base_url . $this->balance_check_url;
-		$params = $this->prepareParamsForRequest($params);
-
-		return $this->runApiRequest($url, $params);
-	}
-
-	protected function checkJoloRecharge(array $params)
-	{
-		$url = $this->api_base_url . $this->bank_check_url;
 		$params = $this->prepareParamsForRequest($params);
 
 		return $this->runApiRequest($url, $params);

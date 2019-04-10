@@ -55,6 +55,7 @@ class JoloRechargeTest extends BaseTest
 		//   prepaid   = Mobile prepaid & datacard recharge
 		//   postpaid  = Mobile postpaid & datacard recharge
 		//   dth  = DTH recharge
+		//   balance = Jolo API balance
 		// 
 		//   These are not implemented for now
 		//   landline  = Landline bill payment
@@ -64,6 +65,17 @@ class JoloRechargeTest extends BaseTest
 		$result = $this->jolo_recharge->check('prepaid', [
 			'txn'		=> '',
 		]);
+
+		// 5 Check Jolo API Balance
+		$result = $this->jolo_recharge->check('balance');
+
+		// 6 Find operator and cirlce of mobile number and dth subscriber ID
+		$result = $this->jolo_recharge->detail('mobile');
+		$result = $this->jolo_recharge->detail('dth');
+
+		// 7 Find plans of mobile number and dth subscriber ID for a circle
+		$result = $this->jolo_recharge->detail('mobile_plan');
+		$result = $this->jolo_recharge->detail('dth_plan');
 
 
 
@@ -280,6 +292,23 @@ class JoloRechargeTest extends BaseTest
 		return true;
 	}
 
+	public function test_jolo_api_balance_check()
+	{
+		$result = $this->jolo_recharge->check('balance');
+
+		if (!$result) {
+			$this->failed();
+			$failed_res = $this->jolo_recharge->getResponse();
+			$failed_res->error = JoloError::getByCode($failed_res->error);
+			print_r($failed_res);
+			return false;
+		}
+		$this->passed();
+		print_r($this->jolo_recharge->getResponse());
+
+		return true;
+	}
+
 	public function test_jolo_api_mobile_prepaid_recharge_dispute_reporting()
 	{
 		$result = $this->jolo_recharge->dispute('prepaid', [
@@ -336,6 +365,85 @@ class JoloRechargeTest extends BaseTest
 
 		return true;
 	}
+
+	public function test_jolo_api_detect_detail_of_mobile_operator_and_circle()
+	{
+		$result = $this->jolo_recharge->detail('mobile', [
+			'mob'		=> '9876543210',   /* mobile number */
+		]);
+
+		if (!$result) {
+			$this->failed();
+			$failed_res = $this->jolo_recharge->getResponse();
+			$failed_res->error = JoloError::getByCode($failed_res->error);
+			print_r($failed_res);
+			return false;
+		}
+		$this->passed();
+		print_r($this->jolo_recharge->getResponse());
+
+		return true;
+	}
+
+	public function test_jolo_api_detect_detail_of_dth_operator_and_circle()
+	{
+		$result = $this->jolo_recharge->detail('dth', [
+			'mob'		=> '93319254',   /* dth subscriber id */
+		]);
+
+		if (!$result) {
+			$this->failed();
+			$failed_res = $this->jolo_recharge->getResponse();
+			$failed_res->error = JoloError::getByCode($failed_res->error);
+			print_r($failed_res);
+			return false;
+		}
+		$this->passed();
+		print_r($this->jolo_recharge->getResponse());
+
+		return true;
+	}
+
+	public function test_jolo_api_get_detail_of_mobile_plan_and_offer()
+	{
+		$result = $this->jolo_recharge->detail('mobile_plan', [
+			'opt'		=> 28,  	/* operator code (airtel) */
+			'cir'		=> 3,   	/* circle code (kolkata) */
+		]);
+
+		if (!$result) {
+			$this->failed();
+			$failed_res = $this->jolo_recharge->getResponse();
+			$failed_res->error = JoloError::getByCode($failed_res->error);
+			print_r($failed_res);
+			return false;
+		}
+		$this->passed();
+		print_r($this->jolo_recharge->getResponse());
+
+		return true;
+	}
+
+	public function test_jolo_api_get_detail_of_dth_plan_and_offer()
+	{
+		$result = $this->jolo_recharge->detail('dth_plan', [
+			'opt'		=> 97,   /* operator code (dish tv) */
+		]);
+
+		if (!$result) {
+			$this->failed();
+			$failed_res = $this->jolo_recharge->getResponse();
+			$failed_res->error = JoloError::getByCode($failed_res->error);
+			print_r($failed_res);
+			return false;
+		}
+		$this->passed();
+		print_r($this->jolo_recharge->getResponse());
+
+		return true;
+	}
+
+
 
 	
 }
@@ -403,6 +511,34 @@ $test12 = new JoloRechargeTest(new JoloRecharge(new Phurl, $api_key = "167405610
 // TEST #12 : test_jolo_api_dth_recharge_dispute_reporting
 echo "TEST #12: test_jolo_api_dth_recharge_dispute_reporting: ";
 $test12->test_jolo_api_dth_recharge_dispute_reporting();
+
+
+
+$test13 = new JoloRechargeTest(new JoloRecharge(new Phurl, $api_key = "167405610330016", $userid = 'skm_im07', $mode = 0));
+// TEST #13 : test_jolo_api_balance_check
+echo "TEST #13: test_jolo_api_balance_check: ";
+$test13->test_jolo_api_balance_check();
+
+
+$test14 = new JoloRechargeTest(new JoloRecharge(new Phurl, $api_key = "167405610330016", $userid = 'skm_im07', $mode = 0));
+// TEST #14 : test_jolo_api_detect_detail_of_mobile_operator_and_circle
+echo "TEST #14: test_jolo_api_detect_detail_of_mobile_operator_and_circle: ";
+$test14->test_jolo_api_detect_detail_of_mobile_operator_and_circle();
+
+$test15 = new JoloRechargeTest(new JoloRecharge(new Phurl, $api_key = "167405610330016", $userid = 'skm_im07', $mode = 0));
+// TEST #15 : test_jolo_api_detect_detail_of_dth_operator_and_circle
+echo "TEST #15: test_jolo_api_detect_detail_of_dth_operator_and_circle: ";
+$test15->test_jolo_api_detect_detail_of_dth_operator_and_circle();
+
+$test16 = new JoloRechargeTest(new JoloRecharge(new Phurl, $api_key = "167405610330016", $userid = 'skm_im07', $mode = 0));
+// TEST #16 : test_jolo_api_get_detail_of_mobile_plan_and_offer
+echo "TEST #16: test_jolo_api_get_detail_of_mobile_plan_and_offer: ";
+$test16->test_jolo_api_get_detail_of_mobile_plan_and_offer();
+
+$test17 = new JoloRechargeTest(new JoloRecharge(new Phurl, $api_key = "167405610330016", $userid = 'skm_im07', $mode = 0));
+// TEST #17 : test_jolo_api_get_detail_of_dth_plan_and_offer
+echo "TEST #17: test_jolo_api_get_detail_of_dth_plan_and_offer: ";
+$test17->test_jolo_api_get_detail_of_dth_plan_and_offer();
 
 
 

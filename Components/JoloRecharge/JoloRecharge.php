@@ -82,48 +82,23 @@ class JoloRecharge
 	}
 
 	/**
-	 * Verify Jolo entities are successfully created or not. Jolo entities
-	 *  are JoloAgent, JoloBeneficiary and JoloRechargeTransfer
+	 * Get the details of an API call
+	 * used for fetching plans and offers of Mobile number or DTH within a
+	 * circle.
 	 *
-	 * @param $entity string  'agent' | 'beneficiary' | 'transfer'
-	 * @param $params array  Parameters for corresponding entity
-	 * @return boolean  true if verification is successful else false
+	 * @param $entity string
+	 * @param $params array
+	 * @return boolean  true if request is successful else false
 	 */
-	public function verify($entity, array $params)
-	{
-		// Construct method name that corresponds to existing validation
-		// method for verify api, constructed name will look like:
-		// validateVerifyJolo<Entity>
-		// validateVerifyJoloAgent, validateVerifyJoloBeneficiary
-		$method_name = $this->prepareMethod($entity, $prefix = 'verify');
-
-		// $validate_method_name = validateVerifyJolo<Entity>
-		$validate_method_name = "validate".ucfirst($method_name);
-
-		// Check Validate method for constructed method name exists
-		if (!method_exists($this, $validate_method_name)) {
-			throw new \Exception("Method $method_name does not exist");
-		}
-
-		// Call the validate method for checking required params for verify
-		// api call is given, if fails then throw exception
-		if (!$this->{$validate_method_name}($params)) {
-			throw new \Exception("Invalid params given for verify. check doc for required params.");
-		}
-
-		// Call the verify Api method with given parameters
-		return $this->{$method_name}($params);
-	}
-
 	public function detail($entity, array $params)
 	{
 		// Construct method name that corresponds to existing validation
 		// method for detail api, constructed name will look like:
-		// validateDetailJolo<Entity>
-		// validateDetailJoloAgent, validateDetailJoloBeneficiary
+		// validateDetail<Entity>
+		// validateDetailMobile, validateDetailDth, validateDetailMobilePlan
 		$method_name = $this->prepareMethod($entity, $prefix = 'detail');
 
-		// $validate_method_name = validateDetailJolo<Entity>
+		// $validate_method_name = validateDetail<Entity>
 		$validate_method_name = "validate".ucfirst($method_name);
 
 		// Check Validate method for constructed method name exists
@@ -134,6 +109,8 @@ class JoloRecharge
 		// Call the validate method for checking required params for verify
 		// api call is given, if fails then throw exception
 		if (!$this->{$validate_method_name}($params)) {
+			var_dump($validate_method_name);
+			var_dump($params);
 			throw new \Exception("Invalid params given for verify. check doc for required params.");
 		}
 
@@ -245,12 +222,34 @@ class JoloRecharge
 			$reflect = new \ReflectionObject($entity);
 			$method_name = 'create' . $reflect->getShortName();
 		} else if (is_string($entity)) {
-			$method_name = $prefix . ucfirst($entity);
+			$method_name = $prefix . $this->prepareSnakeCase($entity);
 		} else {
 			throw new \Exception("Invalid entity name \"$entity\" given");
 		}
 
 		return $method_name;
+	}
+
+	/**
+	 * Construct method name using given $entity string
+	 *  this method called by prepareMethod(). It handles snake case string
+	 *
+	 * @param $entity string
+	 * @return string  Constructed method name
+	 */
+	protected function prepareSnakeCase($entity)
+	{
+		$parts = explode("_", $entity);
+		if (count($parts) === 1) {
+			return $entity;
+		}
+		$method_name = array_shift($parts);
+
+		$parts = array_map(function($part) {
+			return ucfirst($part);
+		}, $parts);
+		
+		return $method_name . implode("", $parts);
 	}
 
 	/**
@@ -331,6 +330,20 @@ class JoloRecharge
 		return $this->validateRequiredParams(
 			$params,
 			$this->required_params['dth_recharge']
+		);
+	}
+
+	/**
+	 * Validates required parameters for balance check
+	 *
+	 * @param $params array  Array of parameters
+	 * @return boolean  true if validation passes else false
+	 */
+	protected function validateCheckBalance(array $params)
+	{
+		return $this->validateRequiredParams(
+			$params,
+			$this->required_params_status['balance']
 		);
 	}
 
@@ -418,121 +431,59 @@ class JoloRecharge
 		);
 	}
 
-	
-
-
 	/**
-	 * Validates required parameters for verifying agent is created or not
+	 * Validates required parameters for mobile operator and circle finder
 	 *
 	 * @param $params array  Array of parameters
 	 * @return boolean  true if validation passes else false
 	 */
-	protected function validateVerifyJoloAgent(array $params)
+	protected function validateDetailMobile(array $params)
 	{
 		return $this->validateRequiredParams(
 			$params,
-			$this->required_params_verify['agent']
+			$this->required_params_detail['mobile']
 		);
 	}
 
 	/**
-	 * Validates required parameters for verifying beneficiary is
-	 *  created or not
+	 * Validates required parameters for DTH operator and circle finder
 	 *
 	 * @param $params array  Array of parameters
 	 * @return boolean  true if validation passes else false
 	 */
-	protected function validateVerifyJoloBeneficiary(array $params)
+	protected function validateDetailDth(array $params)
 	{
 		return $this->validateRequiredParams(
 			$params,
-			$this->required_params_verify['beneficiary']
+			$this->required_params_detail['dth']
 		);
 	}
 
 	/**
-	 * Validates required parameters for verifying Bank Transfer is
-	 *  created or not
+	 * Validates required parameters for mobile plan and offer finder
 	 *
 	 * @param $params array  Array of parameters
 	 * @return boolean  true if validation passes else false
 	 */
-	protected function validateVerifyJoloTransfer(array $params)
+	protected function validateDetailMobilePlan(array $params)
 	{
 		return $this->validateRequiredParams(
 			$params,
-			$this->required_params_verify['transfer']
+			$this->required_params_detail['mobile_plan']
 		);
 	}
 
 	/**
-	 * Validates required parameters for fetching details of agent
+	 * Validates required parameters for DTH plan and offer finder
 	 *
 	 * @param $params array  Array of parameters
 	 * @return boolean  true if validation passes else false
 	 */
-	protected function validateDetailJoloAgent(array $params)
+	protected function validateDetailDthPlan(array $params)
 	{
 		return $this->validateRequiredParams(
 			$params,
-			$this->required_params_detail['agent']
-		);
-	}
-
-	/**
-	 * Validates required parameters for fetching details of beneficiary
-	 *
-	 * @param $params array  Array of parameters
-	 * @return boolean  true if validation passes else false
-	 */
-	protected function validateDetailJoloBeneficiary(array $params)
-	{
-		return $this->validateRequiredParams(
-			$params,
-			$this->required_params_detail['beneficiary']
-		);
-	}
-
-	/**
-	 * Validates required parameters for deleting a beneficiary
-	 *
-	 * @param $params array  Array of parameters
-	 * @return boolean  true if validation passes else false
-	 */
-	protected function validateDeleteJoloBeneficiary(array $params)
-	{
-		return $this->validateRequiredParams(
-			$params,
-			$this->required_params_delete['beneficiary']
-		);
-	}
-
-	/**
-	 * Validates required parameters for checking Jolo API balance
-	 *  no parameter is required for this Jolo API call
-	 *
-	 * @param $params array  Empty parameter
-	 * @return boolean  true if validation passes else false
-	 */
-	protected function validateCheckJoloBalance(array $params)
-	{
-		return $this->validateRequiredParams(
-			$params,
-			$this->required_params_check['balance']
-		);
-	}
-
-	/**
-	 * Validates required parameters for checking bank account
-	 *
-	 * @param $params array  Empty parameter
-	 * @return boolean  true if validation passes else false
-	 */
-	protected function validateCheckJoloRecharge(array $params)
-	{
-		return $this->validateRequiredParams(
-			$params,
-			$this->required_params_check['bank']
+			$this->required_params_detail['dth_plan']
 		);
 	}
 
@@ -608,6 +559,21 @@ class JoloRecharge
 			$res_obj = new \stdClass;
 			$res_obj->status = "FAILED";
 			$res_obj->error = $this->CUSTOM_ERROR_CODE;
+
+		// If $res_obj is correctly converted to stdClass from JSON and
+		// status property does not exist then set status property
+		// This case only occurs when operator or plan finder api is called
+		} else if ($res_obj instanceof \stdClass && !isset($res_obj->status)) {
+			$res_obj->status = "SUCCESS";
+
+		// If $res_obj is array of stdClass then create propper response object
+		} else if (is_array($res_obj)) {
+			$obj = new \stdClass;
+			$obj->plans = $res_obj;
+			$obj->status = "SUCCESS";
+			$res_obj = null;
+			$res_obj = $obj;
+			$obj = null;
 		}
 
 		// If Recharge Dispute API call was performed then status will

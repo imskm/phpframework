@@ -167,6 +167,45 @@ $response = $jolo_rech->getResponse();
 
 ```
 
+## Check Jolo API balance (remaining)
+```php
+// Import Phurl class
+use Components\Phurl\Phurl;
+use Components\JoloRecharge\JoloRecharge;
+
+$jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid = "skmxxx", $api_mode = 0);
+
+// Check API balance
+// $result is boolean, true if agent created succefully else false
+// Only one argument required, and no extra params is required for balance check
+$result = $this->jolo_recharge->check('balance');
+
+// If balance check request was successful
+if ($result === true) {
+	// then do something here (may be set flash message)
+}
+
+// Get response, came back from Jolo, save response for future reference
+// Response structure:
+// * If request not accepted:
+// stdClass Object
+// (
+// 	[status] => FAILED
+// 	[error] => 1
+// )
+// * If request accepted:
+// stdClass Object
+// (
+//     [status] => SUCCESS
+//     [error] => 0
+//     [balance] => 0.00
+//     [totalearn] => 0.00
+//     [time] => April 10 2019 09:54:42 AM
+// )
+$response = $jolo_rech->getResponse();
+
+```
+
 ## Check status of previous recharge transaction
 ```php
 // Import Phurl class
@@ -241,7 +280,7 @@ $result = $this->jolo_recharge->dispute('prepaid', [
 	'txn'		=> '123',   /* orderid that you generated not Jolo */
 ]);
 
-// dispute reporting of previous transaction was successful
+// Dispute reporting of previous transaction was successful
 // If it was successful then $result is true else false
 // ** If there was no dispute then $result is false
 if ($result === true) {
@@ -268,6 +307,166 @@ if ($result === true) {
 // 	[service] => 9999999999
 // 	[amount] => 99
 // )
+$response = $jolo_rech->getResponse();
+
+```
+
+## Find operator and circle by mobile number or DTH subscriber ID
+```php
+// Import Phurl class
+use Components\Phurl\Phurl;
+use Components\JoloRecharge\JoloRecharge;
+
+$jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid = "skmxxx", $api_mode = 0);
+
+// Find operator and circle detail of (mobile | dth)
+// All the parameters are required and key must match as given in this example
+// $result is boolean, true if agent created succefully else false
+// first argument of detail() method can be:
+// mobile 	--> for mobile operator and circle codes
+// dth      --> for dth operator and circle codes
+$result = $this->jolo_recharge->detail('mobile', [
+	'mob'		=> '9876543210',   /* mobile number */
+]);
+
+// If detail api call for mobile | dth was succefful
+// then $result will be true else false
+if ($result === true) {
+	// Detail of oeprator successfully fethced from Jolo
+}
+
+// Get response, came back from Jolo, save response for future reference
+// If recharge disputed / recharged not maid but status is success then
+//  order id can be used to report dispute in transaction
+// Response structure:
+// * If request not accepted:
+// stdClass Object
+// (
+// 	[status] => FAILED
+// 	[error] => 123
+// )
+// * If request accepted:
+// stdClass Object
+// (
+//     [operator_code] => 28
+//     [circle_code] => 15
+//     [status] => SUCCESS
+// )
+
+$response = $jolo_rech->getResponse();
+
+```
+
+## Find plans and offer for mobile prepaid/postpaid
+```php
+// Import Phurl class
+use Components\Phurl\Phurl;
+use Components\JoloRecharge\JoloRecharge;
+
+$jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid = "skmxxx", $api_mode = 0);
+
+// Find plans and offer of mobile prepaid and postpaid
+// All the parameters are required and key must match as given in this example
+// $result is boolean, true if agent created succefully else false
+$result = $this->jolo_recharge->detail('mobile_plan', [
+	'opt'		=> 28,  	/* operator code (airtel) */
+	'cir'		=> 3,   	/* circle code (kolkata) */
+]);
+
+// If detail api call for mobile_plan was succefful
+// then $result will be true else false
+if ($result === true) {
+	// Detail of plans successfully fethced from Jolo
+}
+
+// Get response, came back from Jolo
+// Response structure:
+// * If request not accepted:
+// stdClass Object
+// (
+// 	[status] => FAILED
+// 	[error] => 123
+// )
+// * If request accepted (plans can have large # of elements in array):
+// stdClass Object
+// (
+//     [plans] => Array
+//         (
+//             [0] => stdClass Object
+//                 (
+//                     [Detail] => 30 MB 2G/3G/4G Data
+//                     [Amount] => 5
+//                     [Validity] => 1 Day
+//                 )
+
+//             [1] => stdClass Object
+//                 (
+//                     [Detail] => 100MB 2G/3G/4G Data
+//                     [Amount] => 18
+//                     [Validity] => 3 Days
+//                 )
+// 				...
+//         )
+//     [status] => SUCCESS
+// )
+
+$response = $jolo_rech->getResponse();
+
+```
+
+
+## Find plans and offer for DTH
+```php
+// Import Phurl class
+use Components\Phurl\Phurl;
+use Components\JoloRecharge\JoloRecharge;
+
+$jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid = "skmxxx", $api_mode = 0);
+
+// Find plans and offer of DTH
+// All the parameters are required and key must match as given in this example
+// $result is boolean, true if agent created succefully else false
+$result = $this->jolo_recharge->detail('dth_plan', [
+	'opt'		=> 97, 	/* operator code (airtel) */
+]);
+
+// If detail api call for dth_plan was succefful
+// then $result will be true else false
+if ($result === true) {
+	// Detail of plans successfully fethced from Jolo
+}
+
+// Get response, came back from Jolo
+// Response structure:
+// * If request not accepted:
+// stdClass Object
+// (
+// 	[status] => FAILED
+// 	[error] => 123
+// )
+// * If request accepted (plans can have large # of elements in array):
+// stdClass Object
+// (
+//     [plans] => Array
+//         (
+//             [0] => stdClass Object
+//                 (
+//                     [Detail] => DISH99 SD - 145+ Channels & Services
+//                     [Amount] => 99
+//                     [Validity] => 1 month
+//                 )
+
+//             [1] => stdClass Object
+//                 (
+//                     [Detail] => SUPER FAMILY SD - 277+ Channels & Services
+//                     [Amount] => 270
+//                     [Validity] => 1 month
+//                 )
+// 				...
+//         )
+//     [status] => SUCCESS
+// )
+
 $response = $jolo_rech->getResponse();
 
 ```
