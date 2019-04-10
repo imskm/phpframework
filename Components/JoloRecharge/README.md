@@ -371,6 +371,10 @@ $jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid 
 $result = $this->jolo_recharge->detail('mobile_plan', [
 	'opt'		=> 28,  	/* operator code (airtel) */
 	'cir'		=> 3,   	/* circle code (kolkata) */
+
+	// typ => TUP,			/* Plan Category type (Top up, ..) */
+	// max => ,				/* Number of rows */
+	// amt => ,				/* Filter by amount */
 ]);
 
 // If detail api call for mobile_plan was succefful
@@ -413,6 +417,19 @@ if ($result === true) {
 $response = $jolo_rech->getResponse();
 
 ```
+
+### Category codes
+**Code** 	**Operator**
+--		--
+TUP		Top-up Recharge
+FTT 	Full Talk-time Recharge
+2G 		2G Data Recharge
+3G 		3G/4G Data Recharge
+SMS 	SMS Pack Recharge
+LSC 	Local/STD/ISD Call Recharge
+OTR 	Other Recharge
+RMG 	National/International Roaming Recharge
+
 
 
 ## Find plans and offer for DTH
