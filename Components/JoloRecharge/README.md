@@ -419,16 +419,17 @@ $response = $jolo_rech->getResponse();
 ```
 
 ### Category codes
-**Code** 	**Operator**
---		--
-TUP		Top-up Recharge
-FTT 	Full Talk-time Recharge
-2G 		2G Data Recharge
-3G 		3G/4G Data Recharge
-SMS 	SMS Pack Recharge
-LSC 	Local/STD/ISD Call Recharge
-OTR 	Other Recharge
-RMG 	National/International Roaming Recharge
+Plan/Offer category type for filtering plans in jolo api call. Code will be value of `typ`.
+| Code     | Operator                                  |
+| -------- | ----------------------------------------- |
+| TUP      | Top-up Recharge                           |
+| FTT      | Full Talk-time Recharge                   |
+| 2G       | 2G Data Recharge                          |
+| 3G       | 3G/4G Data Recharge                       |
+| SMS      | SMS Pack Recharge                         |
+| LSC      | Local/STD/ISD Call Recharge               |
+| OTR      | Other Recharge                            |
+| RMG      | National/International Roaming Recharge   |
 
 
 
