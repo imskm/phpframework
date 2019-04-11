@@ -140,7 +140,7 @@ class JoloRechargeOperator
 
 	public static function getPrepaidByCode($code)
 	{
-		if (self::isPrepaidExist($code)) {
+		if (!self::isPrepaidExist($code)) {
 			return "";
 		}
 
@@ -149,7 +149,7 @@ class JoloRechargeOperator
 
 	public static function getPostpaidByCode($code)
 	{
-		if (self::isPostpaidExist($code)) {
+		if (!self::isPostpaidExist($code)) {
 			return "";
 		}
 
@@ -158,7 +158,7 @@ class JoloRechargeOperator
 
 	public static function getDthByCode($code)
 	{
-		if (self::isDthExist($code)) {
+		if (!self::isDthExist($code)) {
 			return "";
 		}
 
@@ -203,7 +203,7 @@ class JoloRechargeOperator
 	 */
 	public static function getDthOperatorId($code)
 	{
-		if (self::isDthExist($code)) {
+		if (!self::isDthExist($code)) {
 			return 0;	/* None */
 		}
 
