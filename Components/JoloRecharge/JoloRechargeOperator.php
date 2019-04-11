@@ -8,11 +8,10 @@ namespace Components\JoloRecharge;
  */
 class JoloRechargeOperator
 {
-	private static $operators = [
-		/* ----------------------------------------------------------
-		 * Prepaid mobile recharge operators
-		 * ----------------------------------------------------------
-		 */
+	/**
+	 * @var array Prepaid mobile recharge operators
+	 */
+	private static $operators_prepaid = [
 		'AT'	=>	'Airtel',
 		'BS'	=>	'BSNL',
 		'BSS'	=>	'BSNL Special',
@@ -25,11 +24,12 @@ class JoloRechargeOperator
 		'MTDS'	=>	'MTNL Delhi Special',
 		'MTM'	=>	'MTNL Mumbai',
 		'MTMS'	=>	'MTNL Mumbai Special',
+	];
 
-		/* ----------------------------------------------------------
-		 * Postpaid mobile recharge operators
-		 * ----------------------------------------------------------
-		 */
+	/**
+	 * @var array Postpaid mobile recharge operators
+	 */
+	private static $operators_postpaid = [
 		'APOS'	=>	'Airtel',
 		'BPOS'	=>	'BSNL',
 		'IPOS'	=>	'Idea',
@@ -37,28 +37,30 @@ class JoloRechargeOperator
 		'VPOS'	=>	'Vodafone',
 		'DGPOS'	=>	'Tata Docomo GSM',
 
-		/* ----------------------------------------------------------
-		 * DTH recharge operators
-		 * ----------------------------------------------------------
-		 */
+	];
+
+	/**
+	 * @var array DTH recharge operators
+	 */
+	private static $operators_dth = [
 		'VT'	=>	'Videocon D2H',
 		'SD'	=>	'Sun DTH',
 		'BT'	=>	'Reliance Big TV DTH',
 		'TS'	=>	'Tata Sky DTH',
 		'DT'	=>	'Dish DTH',
 		'AD'	=>	'Airtel DTH',
-
-		/* ----------------------------------------------------------
-		 * Landline and Broadband bill payment not implemented
-		 * ----------------------------------------------------------
-		 */
 	];
+	/* ----------------------------------------------------------
+	 * Landline and Broadband bill payment not implemented
+	 * ----------------------------------------------------------
+	 */
 
-	private static $operators_number = [
-		/* ----------------------------------------------------------
-		 * Prepaid mobile recharge operators
-		 * ----------------------------------------------------------
-		 */
+
+	/**
+	 * @var array Prepaid mobile recharge operators (number code)
+	 *      used in for fetching plans of an oeprator (only prepaid)
+	 */
+	private static $operators_mobile_id = [
 		'AT'	=>	28,
 		'BS'	=>	3,
 		'BSS'	=>	3,
@@ -71,11 +73,13 @@ class JoloRechargeOperator
 		'MTDS'	=>	20,
 		'MTM'	=>	6,
 		'MTMS'	=>	6,
+	];
 
-		/* ----------------------------------------------------------
-		 * DTH recharge operators
-		 * ----------------------------------------------------------
-		 */
+	/**
+	 * @var array DTH recharge operators (number code)
+	 */
+	private static $operators_dth_id = [
+
 		'VT'	=>	95,
 		'SD'	=>	98,
 		'BT'	=>	96,
@@ -88,7 +92,7 @@ class JoloRechargeOperator
 	 * @var array  of circle codes
 	 */
 	private static $operators_circles = [
-		 0 => 'None',
+		 // 0 => 'None',
 		 1 => 'Delhi/NCR',
 		 2 => 'Mumbai',
 		 3 => 'Kolkata',
@@ -114,9 +118,19 @@ class JoloRechargeOperator
 		23 => 'Chennai',
 	];
 
-	public static function all()
+	public static function allPrepaid()
 	{
-		return self::$operators;
+		return self::$operators_prepaid;
+	}
+
+	public static function allPostpaid()
+	{
+		return self::$operators_postpaid;
+	}
+
+	public static function allDth()
+	{
+		return self::$operators_dth;
 	}
 
 	public static function allCircles()
@@ -124,13 +138,46 @@ class JoloRechargeOperator
 		return self::$operators_circles;
 	}
 
-	public static function getByCode($code)
+	public static function getPrepaidByCode($code)
 	{
-		if (self::isExist($code)) {
+		if (self::isPrepaidExist($code)) {
 			return "";
 		}
 
-		return self::$operators[$code];
+		return self::$operators_prepaid[$code];
+	}
+
+	public static function getPostpaidByCode($code)
+	{
+		if (self::isPostpaidExist($code)) {
+			return "";
+		}
+
+		return self::$operators_postpaid[$code];
+	}
+
+	public static function getDthByCode($code)
+	{
+		if (self::isDthExist($code)) {
+			return "";
+		}
+
+		return self::$operators_dth[$code];
+	}
+
+	public static function isPrepaidExist($code)
+	{
+		return array_key_exists($code, self::$operators_prepaid);
+	}
+
+	public static function isPostpaidExist($code)
+	{
+		return array_key_exists($code, self::$operators_postpaid);
+	}
+
+	public static function isDthExist($code)
+	{
+		return array_key_exists($code, self::$operators_dth);
 	}
 
 	/**
@@ -139,18 +186,28 @@ class JoloRechargeOperator
 	 * @param $code string
 	 * @return int  on success valid operator id, on failure 0
 	 */
-	public static function getOperatorId($code)
+	public static function getPrepaidOperatorId($code)
 	{
-		if (self::isExist($code)) {
+		if (self::isPrepaidExist($code)) {
 			return 0;	/* None */
 		}
 
-		return self::$operators_number[$code];
+		return self::$operators_mobile_id[$code];
 	}
 
-	public static function isExist($code)
+	/**
+	 * Gets DTH operator number code
+	 *
+	 * @param $code string
+	 * @return int  on success valid operator id, on failure 0
+	 */
+	public static function getDthOperatorId($code)
 	{
-		return array_key_exists($code, self::$operators);
+		if (self::isDthExist($code)) {
+			return 0;	/* None */
+		}
+
+		return self::$operators_dth_id[$code];
 	}
 
 	public static function getCircle($code)
@@ -161,6 +218,4 @@ class JoloRechargeOperator
 
 		return self::$operators_circles[$code];
 	}
-
-	
 }
