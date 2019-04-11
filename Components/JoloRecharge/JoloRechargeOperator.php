@@ -188,7 +188,7 @@ class JoloRechargeOperator
 	 */
 	public static function getPrepaidOperatorId($code)
 	{
-		if (self::isPrepaidExist($code)) {
+		if (!self::isPrepaidExist($code)) {
 			return 0;	/* None */
 		}
 
