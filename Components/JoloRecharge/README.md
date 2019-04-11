@@ -30,6 +30,7 @@ $jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_mode = 
 // Import Phurl class
 use Components\Phurl\Phurl;
 use Components\JoloRecharge\JoloRecharge;
+use Components\JoloRecharge\Entities\MobilePreRecharge;
 
 $jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid = "skmxxx", $api_mode = 0);
 
@@ -80,6 +81,7 @@ $response = $jolo_rech->getResponse();
 // Import Phurl class
 use Components\Phurl\Phurl;
 use Components\JoloRecharge\JoloRecharge;
+use Components\JoloRecharge\Entities\MobilePostRecharge;
 
 $jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid = "skmxxx", $api_mode = 0);
 
@@ -126,6 +128,7 @@ $response = $jolo_rech->getResponse();
 // Import Phurl class
 use Components\Phurl\Phurl;
 use Components\JoloRecharge\JoloRecharge;
+use Components\JoloRecharge\Entities\DthRecharge;
 
 $jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid = "skmxxx", $api_mode = 0);
 
