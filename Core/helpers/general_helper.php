@@ -87,6 +87,11 @@ function genOptionHtmlTag($from, $to, $selected = null)
 	return $html;
 }
 
+function isEnglishText($text)
+{
+	return strlen($text) == strlen(utf8_decode($text));
+}
+
 
 
 /**
