@@ -64,10 +64,12 @@ class Logger implements LoggerInterface
 		fclose($fh);
 	}
 
-	public function formatMessage($level, $message)
+	protected function formatMessage($level, $message)
 	{
+		$caller_stack_index = 4; /* array index # of backtrace result will
+									always be the caller stack frame */
 		$debug_info 	= debug_backtrace();
-		$debug_info 	= $debug_info[count($debug_info) - 1];
+		$debug_info 	= $debug_info[$caller_stack_index];
 		$severity 		= $level;
 		$timestamp 		= date("Y-m-d\TH:i:s");
 		$machine 		= "-";
