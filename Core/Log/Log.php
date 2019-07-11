@@ -24,4 +24,15 @@ class Log
 
 		return self::$logger;
 	}
+
+	public static function __callStatic($name, $args)
+	{
+		if (!is_callable([self::$logger, $name])) {
+			throw new \Exception(
+				"Method $name is not callable from outside of object "
+				. get_class(self::$logger));
+		}
+
+		return self::getLoggerInstance()->{$name}($args[0]);
+	}
 }

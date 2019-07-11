@@ -53,4 +53,9 @@ class Logger implements LoggerInterface
 	{
 
 	}
+
+	protected function writeLog($level, $message)
+	{
+		
+	}
 }
