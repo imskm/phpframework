@@ -56,6 +56,24 @@ class LoggerTest extends BaseTest
 		
 		return false;
 	}
+
+	public function test_log_message_is_formatted_properly()
+	{
+		$regex = "/^<([a-z]+)> "
+				."([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2}) "
+				."- "
+				."(.*)\.php"
+				."\(([0-9]+)\) "
+				."(.*)$/";
+		$msg = Log::formatMessage("error", "This is an error message #12../\?");
+		if(preg_match($regex, $msg) === 0) {
+			$this->failed();
+			return false;
+		}
+		$this->passed();
+
+		return true;
+	}
 }
 
 $test = new LoggerTest;
@@ -71,3 +89,7 @@ $test->test_all_callable_methods_can_be_called();
 // TEST #3: test_not_callable_methods_should_not_be_called
 echo "TEST #3: test_not_callable_methods_should_not_be_called: ";
 $test->test_not_callable_methods_should_not_be_called();
+
+// TEST #4: test_log_message_is_formatted_properly
+echo "TEST #4: test_log_message_is_formatted_properly: ";
+$test->test_log_message_is_formatted_properly();
