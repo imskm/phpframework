@@ -9,14 +9,26 @@ use Core\Log\LoggerInterface;
  */
 class Logger implements LoggerInterface
 {
+	/**
+	 * @var $storage_path string
+	 */
+	protected $storage_path;
+
+	public function __construct($storage_path)
+	{
+		$this->storage_path = $storage_path;
+	}
+
 	public function emergency($message)
 	{
 
 	}
+
 	public function alert($message)
 	{
 
 	}
+
 	public function critical($message)
 	{
 
@@ -33,7 +45,7 @@ class Logger implements LoggerInterface
 	{
 
 	}
-	public function information($message)
+	public function info($message)
 	{
 
 	}

@@ -26,6 +26,6 @@ interface LoggerInterface
 	public function error($message);
 	public function warning($message);
 	public function notice($message);
-	public function information($message);
+	public function info($message);
 	public function debug($message);
 }
