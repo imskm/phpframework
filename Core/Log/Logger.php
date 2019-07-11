@@ -21,7 +21,7 @@ class Logger implements LoggerInterface
 
 	public function emergency($message)
 	{
-
+		$this->writeLog(__FUNCTION__, $message);
 	}
 
 	public function alert($message)
@@ -56,6 +56,30 @@ class Logger implements LoggerInterface
 
 	protected function writeLog($level, $message)
 	{
-		
+		$fmt_message = $this->formatMessage($level, $message);
+
+		$fh = fopen($this->storage_path, "a");
+
+
+		fclose($fh);
+	}
+
+	public function formatMessage($level, $message)
+	{
+		$debug_info 	= debug_backtrace();
+		$debug_info 	= $debug_info[count($debug_info) - 1];
+		$severity 		= $level;
+		$timestamp 		= date("Y-m-d\TH:i:s");
+		$machine 		= "-";
+		$app_name 		= "-";
+		$file_name 		= $debug_info['file'];
+		$line_no 		= $debug_info['line'];
+		$proc_id 		= "-";
+		$msg_id 		= "-";
+		$msg 			= $message;
+
+		$fmt_message = "<$severity> $timestamp $machine $file_name($line_no) $msg";
+
+		return $fmt_message;
 	}
 }
