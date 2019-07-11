@@ -27,12 +27,18 @@ class Log
 
 	public static function __callStatic($name, $args)
 	{
+		// If method $name is not callable then throw Exception
 		if (!is_callable([self::$logger, $name])) {
 			throw new \Exception(
 				"Method $name is not callable from outside of object "
 				. get_class(self::$logger));
 		}
 
-		return self::getLoggerInstance()->{$name}($args[0]);
+		// If $args[0] (i.e. message) is not string then throw Exception
+		if (!is_string($args[0])) {
+			throw new \Exception("Argument of method $name must be string");
+		}
+
+		return call_user_func_array([self::getLoggerInstance(), $name], $args);
 	}
 }
