@@ -63,10 +63,7 @@ class Logger implements LoggerInterface
 	{
 		$fmt_message = $this->formatMessage($level, $message);
 
-		$fh = fopen($this->storage_path, "a");
-		if ($fh === false) {
-			throw new \Exception("Failed to open/create \"$this->storage_path\" file");
-		}
+		$fh = $this->getStorageHandler($this->storage_path);
 		fwrite($fh, "$fmt_message\n");
 		fclose($fh);
 	}
@@ -90,5 +87,34 @@ class Logger implements LoggerInterface
 		$fmt_message = "<$severity> $timestamp $machine $file_name($line_no) $msg";
 
 		return $fmt_message;
+	}
+
+	protected function getStorageHandler($storage_path)
+	{
+		$max_bytes = 1048576; // 1MB = 1048576 bytes
+		$fh = $this->openLogFile($storage_path);
+		fseek($fh, 0, SEEK_END);
+
+		// If log file size hits 1MB or more then create fresh new log file
+		if (ftell($fh) >= $max_bytes) {
+			fclose($fh);
+			// Rename the old file and create new one
+			if (rename($storage_path, "$storage_path_".time()) === false) {
+				// Don't know what to do when renaming fails
+			}
+			$fh = $this->openLogFile($storage_path);
+		}
+
+		return $fh;
+	}
+
+	protected function openLogFile($storage_path)
+	{
+		$fh = fopen($storage_path, "a+");
+		if ($fh === false) {
+			throw new \Exception("Failed to open/create \"$storage_path\" file");
+		}
+
+		return $fh;
 	}
 }
