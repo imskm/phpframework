@@ -26,32 +26,37 @@ class Logger implements LoggerInterface
 
 	public function alert($message)
 	{
-
+		$this->writeLog(__FUNCTION__, $message);
 	}
 
 	public function critical($message)
 	{
-
+		$this->writeLog(__FUNCTION__, $message);
 	}
+
 	public function error($message)
 	{
-
+		$this->writeLog(__FUNCTION__, $message);
 	}
+
 	public function warning($message)
 	{
-
+		$this->writeLog(__FUNCTION__, $message);
 	}
+
 	public function notice($message)
 	{
-
+		$this->writeLog(__FUNCTION__, $message);
 	}
+
 	public function info($message)
 	{
-
+		$this->writeLog(__FUNCTION__, $message);
 	}
+
 	public function debug($message)
 	{
-
+		$this->writeLog(__FUNCTION__, $message);
 	}
 
 	protected function writeLog($level, $message)
@@ -59,8 +64,10 @@ class Logger implements LoggerInterface
 		$fmt_message = $this->formatMessage($level, $message);
 
 		$fh = fopen($this->storage_path, "a");
-
-
+		if ($fh === false) {
+			throw new \Exception("Failed to open/create \"$this->storage_path\" file");
+		}
+		fwrite($fh, "$fmt_message\n");
 		fclose($fh);
 	}
 
