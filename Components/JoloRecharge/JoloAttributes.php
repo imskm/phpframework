@@ -4,7 +4,9 @@ namespace Components\JoloRecharge;
 
 trait JoloAttributes
 {
-	private $api_base_url = 'https://joloapi.com';
+	private $api_base_url;			/* Will be set at run time as per mode */
+	private $api_base_url_live = 'https://joloapi.com/api/v1';
+	private $api_base_url_test = 'https://joloapi.com/api/demo';
 	private $api_key;
 	private $api_userid;			/* Jolo account user id */
 	private $api_mode; 				/* test = 0, live = 1 */
@@ -19,42 +21,42 @@ trait JoloAttributes
 	 * Recharge API urls
 	 * Leading / (slash) is must DO NOT DELETE IT
 	 */
-	private $mob_pre_rech_url	= '/api/recharge.php'; /* Mobile & Datacard */
-	private $mob_post_rech_url	= '/api/cbill.php';    /* Mobile & Datacard */
-	private $dth_rech_url		= '/api/recharge.php';
-	private $land_broad_url		= '/api/cbill.php';	/* Landline & Broadband */
+	private $mob_pre_rech_url	= '/recharge.php'; /* Mobile & Datacard */
+	private $mob_post_rech_url	= '/cbill.php';    /* Mobile & Datacard */
+	private $dth_rech_url		= '/recharge.php';
+	private $land_broad_url		= '/cbill.php';	/* Landline & Broadband */
 
 	/**
 	 * Jolo API balance checking URL
 	 */
-	private $balance_check_url  = '/api/balance.php';  /* API balance check URL */
+	private $balance_check_url  = '/balance.php';  /* API balance check URL */
 
 	/**
 	 * Recharge status check URL for all types of recharge
 	 * Mobile Prepaid Recharge, Mobile Postpaid Recharge, DTH Recharge, etc.
 	 */
-	private $recharge_check_url = '/api/rechargestatus_client.php';
-	private $recharge_check_jolo_url = '/api/rechargestatus.php'; /* Jolo orderid */
+	private $recharge_check_url = '/rechargestatus_client.php';
+	private $recharge_check_jolo_url = '/rechargestatus.php'; /* Jolo orderid */
 
 	/**
 	 * Report a dispute in recharge to this url using Jolo order Id (txn)
 	 * You can report dispute transaction of last 10 days only.
 	 */
-	private $recharge_dispute_url = '/api/dispute_client.php';
-	private $recharge_dispute_jolo_url = '/api/dispute.php'; /* Jolo orderid */
+	private $recharge_dispute_url = '/dispute_client.php';
+	private $recharge_dispute_jolo_url = '/dispute.php'; /* Jolo orderid */
 
 	/**
 	 * Find operator and circle of a mobile number or DTH subscriber ID
 	 */
-	private $mobile_finder_url 	= '/api/findoperator.php';
-	private $dth_finder_url 	= '/api/finddth.php';
+	private $mobile_finder_url 	= '/findoperator.php';
+	private $dth_finder_url 	= '/finddth.php';
 
 	/**
 	 * Find plan and offer by operator and circle code for mobile
 	 * or DTH subscriber ID
 	 */
-	private $mobile_plan_url 	= '/api/findplan.php';
-	private $dth_plan_url 		= '/api/findplandth.php';
+	private $mobile_plan_url 	= '/findplan.php';
+	private $dth_plan_url 		= '/findplandth.php';
 
 	/**
 	 * Jolo API required params for creating agent, beneficiary
