@@ -375,12 +375,10 @@ $jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid 
 // All the parameters are required and key must match as given in this example
 // $result is boolean, true if agent created succefully else false
 $result = $this->jolo_recharge->detail('mobile_plan', [
-	'opt'		=> 28,  	/* operator code (airtel) */
-	'cir'		=> 3,   	/* circle code (kolkata) */
+	'operator_code'		=> 'AT',  	/* operator code (airtel) */
+	'circle_code'		=> 'WB',   	/* circle code (kolkata) */
 
-	// typ => TUP,			/* Plan Category type (Top up, ..) */
-	// max => ,				/* Number of rows */
-	// amt => ,				/* Filter by amount */
+	// categoryid => '1',	/* Plan Category id (int number, joloapi doc) */
 ]);
 
 // If detail api call for mobile_plan was succefful
@@ -390,54 +388,97 @@ if ($result === true) {
 }
 
 // Get response, came back from Jolo
+$response = $jolo_rech->getResponse();
+
 // Response structure:
 // * If request not accepted:
 // stdClass Object
 // (
 // 	[status] => FAILED
-// 	[error] => 123
+// 	[error] => error message
 // )
 // * If request accepted (plans can have large # of elements in array):
 // stdClass Object
 // (
-//     [plans] => Array
+//     [status] => SUCCESS
+//     [error] => 
+//     [operator_code] => AT
+//     [operator_name] => Airtel
+//     [circle_code] => WB
+//     [circle_name] => West Bengal
+//     [hits_left] => 4981
+//     [plancategory] => Array
 //         (
 //             [0] => stdClass Object
 //                 (
-//                     [Detail] => 30 MB 2G/3G/4G Data
-//                     [Amount] => 5
-//                     [Validity] => 1 Day
+//                     [category] => 3G/4G
+//                     [categoryid] => 1
 //                 )
 
 //             [1] => stdClass Object
 //                 (
-//                     [Detail] => 100MB 2G/3G/4G Data
-//                     [Amount] => 18
-//                     [Validity] => 3 Days
+//                     [category] => SPL/RATE CUTTER
+//                     [categoryid] => 2
 //                 )
-// 				...
-//         )
-//     [status] => SUCCESS
-// )
 
-$response = $jolo_rech->getResponse();
+//             ...
+//         )
+
+//     [plandetail] => Array
+//         (
+//             [0] => stdClass Object
+//                 (
+//                     [category] => SPL/RATE CUTTER
+//                     [categoryid] => 2
+//                     [description] => 40 min Outgoing Free while International Roaming in Selected Countries - Covered Countries : UAE, Saudi Arabia, Malaysia, USA, Sri Lanka, Singapore, Qatar, UK, Kuwait, Nepal, Bangladesh and more countries - Outgoing Free min valid for Local/India - Free min also applicable In Incoming
+//                     [amount] => 296
+//                     [talktime] => 0
+//                     [validity] => 30 Days
+//                     [validityInDays] => 30
+//                     [isNewPlan] => 0
+//                     [popular] => 0
+//                     [operator_code] => AT
+//                     [operator_name] => Airtel
+//                     [circle_code] => WB
+//                     [circle_name] => West Bengal
+//                 )
+
+//             [1] => stdClass Object
+//                 (
+//                     [category] => 3G/4G
+//                     [categoryid] => 1
+//                     [description] => 520 MB 2G/3G/4G Data - For 4G users only
+//                     [amount] => 29
+//                     [talktime] => 0
+//                     [validity] => 28 Days
+//                     [validityInDays] => 28
+//                     [isNewPlan] => 0
+//                     [popular] => 0
+//                     [operator_code] => AT
+//                     [operator_name] => Airtel
+//                     [circle_code] => WB
+//                     [circle_name] => West Bengal
+//                 )
+//             ...
+//         )
+// )
 
 ```
 
 ### Category codes
-Plan/Offer category type for filtering plans in jolo api call. Code will be value of `typ`.
+Plan/Offer category id for filtering plans in jolo api call. Code will be value of `categoryid`.
 
-| Code     | Operator                                  |
+
+| id       | Category                                  |
 | -------- | ----------------------------------------- |
-| TUP      | Top-up Recharge                           |
-| FTT      | Full Talk-time Recharge                   |
-| 2G       | 2G Data Recharge                          |
-| 3G       | 3G/4G Data Recharge                       |
-| SMS      | SMS Pack Recharge                         |
-| LSC      | Local/STD/ISD Call Recharge               |
-| OTR      | Other Recharge                            |
-| RMG      | National/International Roaming Recharge   |
+| 1        | 3G/4G Data Recharge                       |
+| 2        | SPL/RATE CUTTER                           |
+| 3        | Unlimited                                 |
+| 4        | 2G Data Recharge                          |
+| 5        | Full Talk-time Recharge                   |
+| 6        | Top-up Recharge                           |
 
+Read the joloapi doc for more details
 
 
 ## Find plans and offer for DTH
@@ -452,7 +493,8 @@ $jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid 
 // All the parameters are required and key must match as given in this example
 // $result is boolean, true if agent created succefully else false
 $result = $this->jolo_recharge->detail('dth_plan', [
-	'opt'		=> 97, 	/* operator code (airtel) */
+	'operator_code'		=> 'AD', /* operator code (airtel DTH) */
+	'circle_code'		=> 'AL', /* circle code (All India), 'AL' is the only one */
 ]);
 
 // If detail api call for dth_plan was succefful
@@ -462,36 +504,55 @@ if ($result === true) {
 }
 
 // Get response, came back from Jolo
+$response = $jolo_rech->getResponse();
+
 // Response structure:
 // * If request not accepted:
 // stdClass Object
 // (
 // 	[status] => FAILED
-// 	[error] => 123
+// 	[error] => error message
 // )
 // * If request accepted (plans can have large # of elements in array):
 // stdClass Object
 // (
-//     [plans] => Array
+//     [status] => SUCCESS
+//     [error] => 
+//     [operator_code] => AD
+//     [operator_name] => AIRTEL DTH
+//     [circle_code] => AL
+//     [circle_name] => ALL INDIA
+//     [hits_left] => 4980
+//     [plancategory] => Array
 //         (
 //             [0] => stdClass Object
 //                 (
-//                     [Detail] => DISH99 SD - 145+ Channels & Services
-//                     [Amount] => 99
-//                     [Validity] => 1 month
+//                     [category] => Monthly Pack
+//                     [categoryid] => 1
 //                 )
 
-//             [1] => stdClass Object
-//                 (
-//                     [Detail] => SUPER FAMILY SD - 277+ Channels & Services
-//                     [Amount] => 270
-//                     [Validity] => 1 month
-//                 )
-// 				...
 //         )
-//     [status] => SUCCESS
-// )
 
-$response = $jolo_rech->getResponse();
+//     [plandetail] => Array
+//         (
+//             [0] => stdClass Object
+//                 (
+//                     [category] => Monthly Pack
+//                     [categoryid] => 1
+//                     [description] => GET Rs 245 in Rs 235 & Recharge your Airtel DigitalTV before due date with Rs 235 and get EXTRA balance of Rs 10 within 48 hours. Offer valid once a month.
+//                     [amount] => 235
+//                     [talktime] => NA
+//                     [validity] => 1 Month
+//                     [validityInMonths] => 1
+//                     [isNewPlan] => 0
+//                     [popular] => 0
+//                     [operator_code] => AD
+//                     [operator_name] => AIRTEL DTH
+//                     [circle_code] => AL
+//                     [circle_name] => ALL INDIA
+//                 )
+//             ...
+//         )
+// )
 
 ```
