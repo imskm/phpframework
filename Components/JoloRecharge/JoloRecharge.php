@@ -276,7 +276,10 @@ class JoloRecharge
 		}
 
 		// Renaming dthid key to service as required by jolo api
-		if (isset($params['dthid'])) {
+		//  rename only when amount is also set i.e. only rename `dthid`
+		//  to `service` when request is for dth recharge and in case of
+		//  dth operator finder don't rename `dthid`
+		if (isset($params['dthid']) && isset($params['amount'])) {
 			$dthid = $params['dthid'];
 			unset($params['dthid']);
 			$params['service'] = $dthid;
