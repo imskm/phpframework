@@ -10,6 +10,11 @@ For Jolo Money Transfer package see my JoloRecharge php package.
 ## Supported
 * For now, this Jolo rechrage API package only supports Prepaid / Postpaid mobile recharge and DTH recharge
 
+## TODO
+* In status check and dispute api, response parameter `txnstatus` is added in response, this parameter represents the actual status of the transaction and not the `status` parameter which was previously used to determine status of transaction.
+Need to fix the status check in `checkResponseStatus` method of `JoloRecharge` class. Also need to take care of `txnstatus` in `convertResponse` method of `JoloRecharge` class.
+* Need to take care of responses of mobile and dth plans and offers. It returns lots of data. Can provide an api to access the response data in more easy fashion.
+
 ## Create JoloRecharge object
 ```php
 // Import Phurl class
@@ -349,14 +354,19 @@ if ($result === true) {
 // stdClass Object
 // (
 // 	[status] => FAILED
-// 	[error] => 123
+// 	[error] => api userid or key is invalid
 // )
 // * If request accepted:
 // stdClass Object
 // (
-//     [operator_code] => 28
-//     [circle_code] => 15
 //     [status] => SUCCESS
+//     [error] => 
+//     [operator_code] => VF
+//     [operator_name] => Vodafone
+//     [circle_code] => DL
+//     [circle_name] => Delhi
+//     [current_type] => PREPAID
+//     [hits_left] => 94864
 // )
 
 $response = $jolo_rech->getResponse();
@@ -530,7 +540,7 @@ $response = $jolo_rech->getResponse();
 //                     [category] => Monthly Pack
 //                     [categoryid] => 1
 //                 )
-
+//             ...
 //         )
 
 //     [plandetail] => Array
