@@ -55,8 +55,8 @@ trait JoloAttributes
 	 * Find plan and offer by operator and circle code for mobile
 	 * or DTH subscriber ID
 	 */
-	private $mobile_plan_url 	= '/findplan.php';
-	private $dth_plan_url 		= '/findplandth.php';
+	private $mobile_plan_url 	= '/operatorplanfinder.php';
+	private $dth_plan_url 		= '/operatorplanfinder_dth.php';
 
 	/**
 	 * Jolo API required params for creating agent, beneficiary
@@ -131,11 +131,12 @@ trait JoloAttributes
 			'dthid'			=> true,   /* DTH ID to find operator & circle */
 		],
 		'mobile_plan' => [
-			'opt' 			=> true,   /* Operator code */
-			'cir' 			=> true,   /* Circle code */
+			'operator_code' => true,   /* Operator code */
+			'circle_code' 	=> true,   /* Circle code */
 		],
 		'dth_plan'=> [
-			'opt' 			=> true,   /* Operator code */
+			'operator_code'	=> true,   /* Operator code */
+			'circle_code' 	=> true,   /* Circle code */
 		],
 	];
 
