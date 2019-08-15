@@ -73,6 +73,8 @@ trait JoloAttributes
 			'amount' 			=> true,  /* amount to be recharged */
 			'orderid' 			=> true,
 			'operator' 			=> true,  /* Operator code like JO for Jio */
+			'customer_name'		=> true,  /* Recharger's full name */
+			'customer_mobile'	=> true,  /* Recharger's mobile number */
 		],
 		'dth_recharge'	   => [
 			'dthid' 			=> true,  /* dth id of customer to be recharged */
