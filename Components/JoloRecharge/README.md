@@ -332,6 +332,7 @@ $jolo_rech = new JoloRecharge(new Phurl, $api_key = "250xxxxxxxxx", $api_userid 
 // dth      --> for dth operator and circle codes
 $result = $this->jolo_recharge->detail('mobile', [
 	'mob'		=> '9876543210',   /* mobile number */
+	/* 'dthid'  => '987222',       dthid params for dth detail request */
 ]);
 
 // If detail api call for mobile | dth was succefful
