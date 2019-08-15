@@ -48,8 +48,8 @@ trait JoloAttributes
 	/**
 	 * Find operator and circle of a mobile number or DTH subscriber ID
 	 */
-	private $mobile_finder_url 	= '/findoperator.php';
-	private $dth_finder_url 	= '/finddth.php';
+	private $mobile_finder_url 	= '/operatorfinder.php';
+	private $dth_finder_url 	= '/operatorfinder_dth.php';
 
 	/**
 	 * Find plan and offer by operator and circle code for mobile
@@ -128,7 +128,7 @@ trait JoloAttributes
 			'mob' 			=> true,   /* Mobile to find operator & circle */
 		],
 		'dth'=> [
-			'mob' 			=> true,   /* DTH ID to find operator & circle */
+			'dthid'			=> true,   /* DTH ID to find operator & circle */
 		],
 		'mobile_plan' => [
 			'opt' 			=> true,   /* Operator code */
