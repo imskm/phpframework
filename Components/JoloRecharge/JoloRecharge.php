@@ -37,6 +37,13 @@ class JoloRecharge
 		$this->api_key 		= $api_key;
 		$this->api_userid 	= $api_userid;
 		$this->api_mode 	= ($api_mode === 0 || $api_mode === 1)? $api_mode : 0;
+
+		// Setting the appropriate base api url for live / test mode
+		if ($this->api_mode === 1) {
+			$this->api_base_url = $this->api_base_url_live;
+		} else {
+			$this->api_base_url = $this->api_base_url_test;
+		}
 	}
 
 	/**
