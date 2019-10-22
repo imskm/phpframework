@@ -7,5 +7,7 @@ namespace Core\Database\Interfaces;
  */
 interface QueryBuilderInterface
 {
+	public function getLimitString(array $limit);
+	public function getOrderByString(array $order);
 	
 }
