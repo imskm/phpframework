@@ -113,4 +113,14 @@ class Development extends \Core\Controller
 
 		var_dump($users);
 	}
+
+	public function filter()
+	{
+		$this->view->render('Development/filter.php');
+	}
+
+	public function ajaxApplyFilter()
+	{
+		var_dump($_GET);
+	}
 }
