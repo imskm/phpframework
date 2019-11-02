@@ -224,11 +224,6 @@ class Query
 		return $this;
 	}
 
-	public function getSqlString()
-	{
-		return $this->sql_string;
-	}
-
 	public function getBindings()
 	{
 		return $this->bindings;
@@ -251,10 +246,6 @@ class Query
 
 	public function getQueryString()
 	{
-		if (!($sql = $this->getSqlString())) {
-			$sql = $this->buildSelect()->getSqlString();
-		}
-
-		return $sql;
+		return $this->sql_string = $this->buildSelect()->sql_string;
 	}
 }
