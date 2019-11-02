@@ -16,6 +16,10 @@ class UserResource extends Filter implements FilterInterface
 		'name',
 		'email',
 	];
+
+	protected $summable = [
+		'id',
+	];
 	
 	public function query()
 	{

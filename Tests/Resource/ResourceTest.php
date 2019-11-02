@@ -85,9 +85,32 @@ class ResourceTest extends BaseTest
 		// Runs base query on database and returns array of stdClass object
 		//   for each database record
 		$result = $resource->get();
-		exit;
 
 		if (!is_array($result) || $resource->getTotalRowCount() < $limit) {
+			var_dump($result);
+			$this->failed();
+			return false;
+		}
+		$this->passed();
+
+		return true;
+	}
+
+	public function test_sum_on_base_query_properly()
+	{
+		$sum_of_id = 34;
+		$resource = new UserResource();
+
+		// First atleast one time I need to call get() before getSummable(),
+		//  and getTotalRowCount()
+		$resource->get();
+
+		// Runs sum query for summable fields and return single row consisting of
+		//   all the summable fields with sum. Fields are named as total_<field>
+		//   @Note: user must declare summable propery in his ResourceClass
+		$result = $resource->getSummable();
+
+		if (!($result instanceof \stdClass) || $result->total_id < $sum_of_id) {
 			var_dump($result);
 			$this->failed();
 			return false;
@@ -100,22 +123,26 @@ class ResourceTest extends BaseTest
 }
 
 $test1 = new ResourceTest;
-// // TEST #1: test_resource_object_created_properly
-// echo "TEST #1: test_resource_object_created_properly: ";
-// $test1->test_resource_object_created_properly();
+// TEST #1: test_resource_object_created_properly
+echo "TEST #1: test_resource_object_created_properly: ";
+$test1->test_resource_object_created_properly();
 
-// // TEST #2: test_get_params_are_passed_properly
-// echo "TEST #2: test_get_params_are_passed_properly: ";
-// $test1->test_get_params_are_passed_properly();
+// TEST #2: test_get_params_are_passed_properly
+echo "TEST #2: test_get_params_are_passed_properly: ";
+$test1->test_get_params_are_passed_properly();
 
-// // TEST #3: test_base_filter_is_working_properly
-// echo "TEST #3: test_base_filter_is_working_properly: ";
-// $test1->test_base_filter_is_working_properly();
+// TEST #3: test_base_filter_is_working_properly
+echo "TEST #3: test_base_filter_is_working_properly: ";
+$test1->test_base_filter_is_working_properly();
 
-// // TEST #4: test_overriding_limit_property_works_properly
-// echo "TEST #4: test_overriding_limit_property_works_properly: ";
-// $test1->test_overriding_limit_property_works_properly();
+// TEST #4: test_overriding_limit_property_works_properly
+echo "TEST #4: test_overriding_limit_property_works_properly: ";
+$test1->test_overriding_limit_property_works_properly();
 
 // TEST #5: test_row_count_is_working_properly
 echo "TEST #5: test_row_count_is_working_properly: ";
 $test1->test_row_count_is_working_properly();
+
+// TEST #6: test_sum_on_base_query_properly
+echo "TEST #6: test_sum_on_base_query_properly: ";
+$test1->test_sum_on_base_query_properly();
