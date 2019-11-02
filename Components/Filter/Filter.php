@@ -28,6 +28,11 @@ class Filter
 	 */
 	protected $selectable = [];
 
+	/**
+	 * @var $sum_row  Object that holds summable fields row
+	 */
+	protected $sum_row;
+
 	public function __construct(array $args = [])
 	{
 		$this->args = $args;
@@ -44,7 +49,12 @@ class Filter
 
 		$this->total_rows = (int) $this->base_query->select(['count(*) as rows'])
 												->get()[0]->rows;
-		var_dump($this->base_query->getQueryString());
+
+		// If summable property is set by user in his derived class
+		//    then fire off sum query also.
+		if (isset($this->summable))
+		$this->sum_row    = $this->base_query->select($this->buildSummableColumns())
+												->get()[0];
 
 		if ($this->selectable)  {
 			$this->base_query->select($this->selectable);
@@ -53,7 +63,6 @@ class Filter
 		// Adds limit and offset clause in sql
 		//  every query is ran with limit to protect loading of entire db
 		$this->addPagination();
-		var_dump($this->base_query->getQueryString());
 
 		return $this->base_query->get();
 	}
@@ -83,4 +92,24 @@ class Filter
 	{
 		return $this->total_rows;
 	}
+
+	protected function buildSummableColumns()
+	{
+		if (!is_array($this->summable)) {
+			throw new \Exception("summable property must be an array");
+		}
+
+		$column = [];
+		foreach ($this->summable as $summable) {
+			$column [] = "SUM({$summable}) AS total_{$summable}";
+		}
+
+		return $column;
+	}
+
+	public function getSummable()
+	{
+		return $this->sum_row;
+	}
+
 }
