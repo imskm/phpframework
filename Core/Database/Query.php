@@ -21,6 +21,11 @@ class Query
 	protected $sql_string = "";
 
 	/**
+	 * Boolean flag to track user has used raw() sql building method
+	 */
+	protected $is_raw_sql = false;
+
+	/**
 	 * Table name
 	 */
 	protected $table = "";
@@ -151,6 +156,7 @@ class Query
 			}
 		}
 		$this->sql_string = $sql;
+		$this->is_raw_sql = true;
 
 		return $this;
 	}
@@ -246,6 +252,12 @@ class Query
 
 	public function getQueryString()
 	{
+		// If user has used raw() method to set his own custom sql
+		// then we don't need to build the sql.
+		if ($this->is_raw_sql) {
+			return $this->sql_string;
+		}
+
 		return $this->sql_string = $this->buildSelect()->sql_string;
 	}
 }
