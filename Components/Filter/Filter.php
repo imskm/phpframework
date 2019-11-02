@@ -44,7 +44,7 @@ class Filter
 	public function get()
 	{
 		if ($this->args) {
-			$this->updateQuery($this->args);
+			$this->updateQuery($this->base_query, $this->args);
 		}
 
 		$this->total_rows = (int) $this->base_query->select(['count(*) as rows'])
@@ -85,7 +85,7 @@ class Filter
 
 	protected function calcOffset($page)
 	{
-		return (int) ($page <= 1 ? 0 : $page * $this->limit);
+		return (int) ($page <= 1 ? 0 : ($page - 1) * $this->limit);
 	}
 
 	public function getTotalRowCount()
@@ -110,6 +110,11 @@ class Filter
 	public function getSummable()
 	{
 		return $this->sum_row;
+	}
+
+	public function getQueryString()
+	{
+		return $this->base_query->getQueryString();
 	}
 
 }
