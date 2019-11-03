@@ -120,6 +120,125 @@ class ResourceTest extends BaseTest
 		return true;
 	}
 
+	public function test_pagination_on_base_filter_is_working_properly()
+	{
+		$limit = 2;
+		$_GET['page'] = 2;
+		$sum_of_id = 34;
+
+		$resource = new UserResource($_GET);
+		$result = $resource->setLimit($limit)->get();
+
+		if (!is_array($result) || count($result) != $limit) {
+			var_dump($result);
+			var_dump($resource->getQueryString());
+			$this->failed();
+			return false;
+		}
+		$this->passed();
+
+		return true;
+	}
+
+	public function test_sum_works_even_with_pagination_query_properly()
+	{
+		$limit = 2;
+		$_GET['page'] = 2;
+
+		// @Note: Sum always considers all rows and ignores limit and offset clause
+		//        it is expected behaviour.
+		$sum_of_id = 34;
+
+		$resource = new UserResource($_GET);
+		$result = $resource->setLimit($limit)->get();
+		$sum = $resource->getSummable();
+
+		if (!is_array($result) || count($result) != $limit || $sum->total_id != $sum_of_id) {
+			echo "\nFirst check the database. It is more likely that db may have changed.\n";
+			var_dump($result);
+			var_dump($sum);
+			var_dump($resource->getQueryString());
+			$this->failed();
+			return false;
+		}
+		$this->passed();
+
+		return true;
+	}
+
+	public function test_basic_filter_with_basic_where_works_properly()
+	{
+		$result_rows = 2;
+		// id[]=before&id[]=6&filters[]=id
+		$_GET['id'] = ['lt', '7'];
+		$_GET['filters']    = ['id', ];
+		unset($_GET['page']);
+
+		$resource = new UserResource($_GET);
+		$result = $resource->get();
+
+		if (!is_array($result) || count($result) != $result_rows) {
+			echo "\nFirst check the database. It is more likely that db may have changed.\n";
+			var_dump($result);
+			var_dump($resource->getQueryString());
+			$this->failed();
+			return false;
+		}
+		$this->passed();
+
+		return true;
+	}
+
+	public function test_count_even_basic_filter_with_basic_where_applied_properly()
+	{
+		$result_rows = 2;
+		// id[]=before&id[]=6&filters[]=id
+		$_GET['id'] = ['lt', '7'];
+		$_GET['filters']    = ['id', ];
+		unset($_GET['page']);
+
+		$resource = new UserResource($_GET);
+		$result = $resource->get();
+		$count = $resource->getTotalRowCount();
+
+		if (!is_array($result) || count($result) != $result_rows || $count != $result_rows) {
+			echo "\nFirst check the database. It is more likely that db may have changed.\n";
+			var_dump($result);
+			var_dump($count);
+			var_dump($resource->getQueryString());
+			$this->failed();
+			return false;
+		}
+		$this->passed();
+
+		return true;
+	}
+
+	public function test_sum_even_basic_filter_with_basic_where_applied_properly()
+	{
+		$result_rows = 2;
+		// id[]=before&id[]=6&filters[]=id
+		$_GET['id'] = ['lt', '7'];
+		$_GET['filters']    = ['id', ];
+		unset($_GET['page']);
+
+		$resource = new UserResource($_GET);
+		$result = $resource->get();
+		$sum = $resource->getSummable()->total_id;
+
+		if (!is_array($result) || count($result) != $result_rows || $sum != 8) {
+			echo "\nFirst check the database. It is more likely that db may have changed.\n";
+			var_dump($result);
+			var_dump($sum);
+			var_dump($resource->getQueryString());
+			$this->failed();
+			return false;
+		}
+		$this->passed();
+
+		return true;
+	}
+
 }
 
 $test1 = new ResourceTest;
@@ -146,3 +265,23 @@ $test1->test_row_count_is_working_properly();
 // TEST #6: test_sum_on_base_query_properly
 echo "TEST #6: test_sum_on_base_query_properly: ";
 $test1->test_sum_on_base_query_properly();
+
+// TEST #7: test_pagination_on_base_filter_is_working_properly
+echo "TEST #7: test_pagination_on_base_filter_is_working_properly: ";
+$test1->test_pagination_on_base_filter_is_working_properly();
+
+// TEST #8: test_sum_works_even_with_pagination_query_properly
+echo "TEST #8: test_sum_works_even_with_pagination_query_properly: ";
+$test1->test_sum_works_even_with_pagination_query_properly();
+
+// TEST #9: test_basic_filter_with_basic_where_works_properly
+echo "TEST #9: test_basic_filter_with_basic_where_works_properly: ";
+$test1->test_basic_filter_with_basic_where_works_properly();
+
+// TEST #10: test_count_even_basic_filter_with_basic_where_applied_properly
+echo "TEST #10: test_count_even_basic_filter_with_basic_where_applied_properly: ";
+$test1->test_count_even_basic_filter_with_basic_where_applied_properly();
+
+// TEST #11: test_sum_even_basic_filter_with_basic_where_applied_properly
+echo "TEST #11: test_sum_even_basic_filter_with_basic_where_applied_properly: ";
+$test1->test_sum_even_basic_filter_with_basic_where_applied_properly();

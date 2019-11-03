@@ -43,21 +43,26 @@
 				<th></th>
 				<th></th>
 				<th>Full name</th>
+				<th>Email</th>
 				<th>Created at</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>1</td>
+			<tr v-for="row in result.records">
+				<td>{{ row.id }}</td>
 				<td>PHOTO</td>
-				<td>Shek Muktar</td>
-				<td>10/01/2019</td>
+				<td>{{ row.name }}</td>
+				<td>{{ row.email }}</td>
+				<td>23-20-2019</td>
 			</tr>
 
 		</tbody>
 		<tfoot>
 			<tr>
+				<th>ROWS</th>
+				<th>{{ result.rows }}</th>
 				<th>TOTAL</th>
+				<th>{{ result.total.total_id }}</th>
 			</tr>
 		</tfoot>
 	</table>
@@ -73,30 +78,32 @@ var app = new Vue({
 		field: "",
 		criteria: "",
 		operator: "",
+		result: [],
 		active_fields: [],
 		filter_fields: [],
 		active_operators: [],
 		base_url: "/development/ajax-apply-filter",
 		fields: {
+			id: 			{name: "Id", type: "number"},
 			full_name: 		{name: "Full name", type: "text"},
 			amount: 		{name: "Amount", type: "number"},
 			created_at: 	{name: "Created at", type: "date"},
 		},
 		operators: {
 			number: [
-				{key: "gt", name: "Greater than"},
-				{key: "lt", name: "Less than"},
-				{key: "gte", name: "Greater than equal"},
-				{key: "lte", name: "Less than equal"},
 				{key: "eq", name: "Equal"},
-				{key: "neq", name: "Not equal"},
+				{key: "ne", name: "Not equal"},
+				{key: "lt", name: "Less than"},
+				{key: "le", name: "Less than equal"},
+				{key: "gt", name: "Greater than"},
+				{key: "ge", name: "Greater than equal"},
 			],
 			date: [
-				{key: "before", name: "Before"},
-				{key: "after", name: "After"},
+				{key: "lt", name: "Before"},
+				{key: "gt", name: "After"},
 				// TODO will implement it later
 				// {key: "between", name: "Between"},
-				{key: "on", name: "On"},
+				{key: "eq", name: "On"},
 			],
 		}
 	},
@@ -106,6 +113,12 @@ var app = new Vue({
 			console.log(this.operator);
 			console.log(this.criteria);
 			var url = this.base_url;
+
+			// If field is selected as empty field then fetch the base dataset
+			if (this.field == "---") {
+				console.log("Hit empty field");
+				return this.applyFilter(url);
+			}
 
 			// $_GET param in the server side
 			// url => filters[list_of_fields_to_be_filtered_and_included_in_get_param]
@@ -132,7 +145,12 @@ var app = new Vue({
 
 			axios.get(url)
 			.then(function(response) {
+				var res = response.data;
+				if (res.status == "success") {
+					app.result = res.data;
+				}
 				console.log(response);
+
 			}).catch(function(error) {
 				console.log(error);
 			}).finally(function() {
@@ -164,6 +182,7 @@ var app = new Vue({
 	},
 
 	mounted: function() {
+		this.applyFilter(this.base_url);
 	},
 
 })

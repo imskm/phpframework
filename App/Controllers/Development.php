@@ -121,6 +121,18 @@ class Development extends \Core\Controller
 
 	public function ajaxApplyFilter()
 	{
-		var_dump($_GET);
+		$resource = new \Tests\Resource\UserResource($_GET);
+
+		$response = new \stdClass;
+		$response->status = "success";
+		$response->errors = [];
+		$response->data = [
+			'records' => $resource->get(),
+			'rows' => $resource->getTotalRowCount(),
+			'total' => $resource->getSummable(),
+			'sql'   => $resource->getQueryString(),
+		];
+
+		echo json_encode($response);
 	}
 }
