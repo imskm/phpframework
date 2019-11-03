@@ -33,6 +33,16 @@ class Filter
 	 */
 	protected $sum_row;
 
+	protected $allowed_operators = [
+		'eq'  => '=',
+		'ne'  => '<>',
+		'lt'  => '<',
+		'le'  => '<=',
+		'gt'  => '>',
+		'ge'  => '>=',
+		// 'bn'  => '',
+	];
+
 	public function __construct(array $args = [])
 	{
 		$this->args = $args;
@@ -47,14 +57,17 @@ class Filter
 			$this->updateQuery($this->base_query, $this->args);
 		}
 
-		$this->total_rows = (int) $this->base_query->select(['count(*) as rows'])
-												->get()[0]->rows;
+		$this->total_rows = (int) $this->base_query
+			  ->select(['count(*) as rows'])->get()[0]->rows;
 
 		// If summable property is set by user in his derived class
 		//    then fire off sum query also.
-		if (isset($this->summable))
-		$this->sum_row    = $this->base_query->select($this->buildSummableColumns())
-												->get()[0];
+		// @Note: Sum does not care about pagination. It always adds all rows with
+		//    with filter.
+		if (isset($this->summable)) {
+			$this->sum_row = $this->base_query
+				  ->select($this->buildSummableColumns())->get()[0];
+		}
 
 		if ($this->selectable)  {
 			$this->base_query->select($this->selectable);
@@ -69,9 +82,75 @@ class Filter
 
 	protected function updateQuery(Database $query, array $args)
 	{
-		// 
+		// If something is wrong in $args then don't apply the fileter
+		//   default back to base filter
+		try {
+			$columns 	= $this->getColumnsFromArg($args);
+
+			foreach ($columns as $key => $column) {
+				$operator 	= $this->getOperatorFromArg($args, $column);
+				$value 		= $this->getValueFromArg($args, $column);
+
+				if ($key == 0) {
+					$this->base_query->where($column, $operator, $value);
+					continue;
+				}
+
+				$this->base_query->andWhere($column, $operator, $value);
+			}
+
+			// 
+
+		} catch (\Exception $e){
+			// @Incomplete: Need to undo what I did in try block
+		}
 
 		return $this;
+	}
+
+	protected function getColumnsFromArg(array $args)
+	{
+		if (!isset($args['filters'])) {
+			throw new \Exception("Missing 'filters' param in argument");
+		}
+
+		foreach ($args['filters'] as $param) {
+			if (!in_array($param, $this->selectable)) {
+				throw new \Exception("Field '{$param}' is not allowed", 1);
+			}
+		}
+
+		return $args['filters'];
+	}
+
+	protected function getOperatorFromArg(array $args, $column)
+	{
+		if (!isset($args[$column])) {
+			throw new \Exception("Missing '{$column}' param in argument");
+		} else if (count($args[$column]) != 2 && count($args[$column]) != 1) {
+			throw new \Exception("Column requires 1 or 2 values, " 
+				. count($args[$column]) . " given.");
+		}
+
+		if (!is_string($args[$column][0])) {
+			throw new \Exception("Value of '{$column}' array must be string");
+		}
+
+		$op = $args[$column][0];
+		if (!array_key_exists($op, $this->allowed_operators)) {
+			throw new \Exception("Operator '{$op}' not allowed.");
+		}
+
+		return $this->allowed_operators[$op];
+	}
+
+	protected function getValueFromArg(array $args, $column)
+	{
+		// No validation is required as we did it already in getOperatorFromArg()
+		//  method. Just don't change the order of calling this method. This method
+		//  must be called after getOperatorFromArg() method
+
+		return $args[$column][1];
 	}
 
 	protected function addPagination()
