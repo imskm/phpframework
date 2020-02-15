@@ -42,7 +42,7 @@ class Config
 	 * Database password
 	 * @var string
 	 */
-	const DB_PASSWORD = "bismillah";
+	const DB_PASSWORD = "";
 
 	/**
 	* Show or Hide error messages on screen
