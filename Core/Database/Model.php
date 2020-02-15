@@ -354,6 +354,24 @@ abstract class Model extends Query
 	}
 
 	/**
+	 * This method fetches recent record by page
+	 *
+	 *
+	 */
+	public static function paginate($items_per_page)
+	{
+		$instance = self::getInstance();
+		$instance->is_fetchable = true;
+		$instance->sql = $instance->buildSelect(['*'])->sql;
+		$instance->sql .= " ORDER BY $instance->primary DESC";
+		$instance->sql .= " LIMIT $items_per_page OFFSET ";
+		$instance->sql .= calc_page_offset(get_page(), $items_per_page);
+		$instance->query($instance->sql);
+
+		return $instance;
+	}
+
+	/**
 	 * Performs insert operation.
 	 *
 	 * @return bool
