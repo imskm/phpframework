@@ -14,8 +14,19 @@ function dateDifference($date_1 , $date_2 , $differenceFormat = '%a' )
 	return $interval->format($differenceFormat);
 }
 
+function get_page()
+{
+	$page = isset($_GET["page"]) && !empty($_GET['page'])? (int) $_GET["page"] : 1;
+
+	return $page === 0? 1 : abs($page);
+}
+
+function calc_page_offset($page, $item)
+{
+	return ($page - 1) * $item;
+
 // Pagination helper function
-function paginationLink($total_items, $items_per_page)
+function pagination_link($total_items, $items_per_page)
 {
 	$pages = ceil($total_items / $items_per_page);
 	$prev_page = isset($_GET["page"]) && $_GET["page"] > 1? $_GET["page"] - 1 : 1;
@@ -56,7 +67,7 @@ function title_case($string)
 	return ucwords(strtolower($string));
 }
 
-function genFileName($length = 20)
+function gen_file_name($length = 20)
 {
 	 $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	 $clen   = strlen( $chars )-1;
@@ -68,7 +79,7 @@ function genFileName($length = 20)
 	 return ($id);
 }
 
-function genOptionHtmlTag($from, $to, $selected = null)
+function gen_option_html_tag($from, $to, $selected = null)
 {
 	$html = '';
 	if ($selected) {
@@ -87,7 +98,7 @@ function genOptionHtmlTag($from, $to, $selected = null)
 	return $html;
 }
 
-function isEnglishText($text)
+function is_english_text($text)
 {
 	return strlen($text) == strlen(utf8_decode($text));
 }
